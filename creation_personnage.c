@@ -195,4 +195,5 @@ pokemon** create_team_ordi(int* numero){
   for(int i = 0; i < 3; i++){
     team[i] = create_part1_poke_ordi(*numero);
   }
+  return team;
 }
