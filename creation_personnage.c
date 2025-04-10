@@ -2,8 +2,13 @@
 
 //attaques speciales
 typedef enum{
-  //à définir
+  Nitrocharge, Abri, Feu_Follet
 }competence_spe;
+
+//attaques de bases
+typedef enum{
+  Flammeche
+}attaque_base;
 
 //statut du pokemon
 typedef enum{
@@ -23,23 +28,84 @@ typedef struct{
   int defense;
   int agilite;
   int vitesse;
-  competence_spe spe;
   statut etat;
+  attaque_base atk1;
+  competence_spe spe1;
+  competence_spe spe2;
+  competence_spe spe3;
   type t;
 }pokemon;
 
 pokemon* create_poke(){
   pokemon* p;
-  //pv max entre 100 et 250
-  p->pv_max = (rand()%(250-101)) + 100;
-  p->pv_courant = p->pv_max;
-  //attaque et defense de base entre 50 et 100
-  p->attaque = (rand()%(100-51)) + 50;
-  p->defense = (rand()%(100-51)) + 50;
-  //agilite entre 1 et 50
-  p->agilite = (rand()%50) + 1;
-  //vitesse entre 30 et 130
-  p->vitesse = (rand()%(130-31)) + 30;
+  char nom[30];
   do{
-    printf("Ecrivez le type que vous voulez que votre pokemon ait parmis :\n
+    printf("Rentrez le nom du pokemon choisi avec une majuscule au debut : ");
+    scanf(" %s", nom);
+  }while(nom != "Arcanin");
+
+  if(nom == "Arcanin"){
+    FILE* fichier;
+    fopen = ("arcanin.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+    char nom_fichier[30];
+        int pv, attaque, defense, vitesse;
+        char type_str[20];
+        char atk1_str[20], spe1_str[20], spe2_str[20], spe3_str[20];
+        fscanf(fichier, "%s", nom_fichier);
+        fscanf(fichier, "%d", &pv);
+        fscanf(fichier, "%d", &attaque);
+        fscanf(fichier, "%d", &defense);
+        fscanf(fichier, "%d", &vitesse);
+        fscanf(fichier, "%s", type_str);
+        fscanf(fichier, "%s", atk1_str);
+        fscanf(fichier, "%s", spe1_str);
+        fscanf(fichier, "%s", spe2_str);
+        fscanf(fichier, "%s", spe3_str);
+        fclose(fichier);
+        // Affectation des stats
+        p->pv_courant = pv;
+        p->pv_max = pv;
+        p->attaque = attaque;
+        p->defense = defense;
+        p->vitesse = vitesse;
+        p->agilite = 0;
+        p->etat = Neutre;
+        // Affectation des attaques
+        p->atk1 = Flammeche;
+        // Affectation des compétences spéciales
+        p->spe1 = Nitrocharge;
+        p->spe2 = Abri;
+        p->spe3 = Feu_Follet;
+        // Type du Pokémon
+        p->t = Feu;
+    }
+  }
+}
+
+pokemon* create1(){
+  pokemon* p;
+  char nom[30];
+  do{
+    printf("Voici tous les pokemon disponibles (...)\n");
+    printf("Rentrez le nom du pokemon choisi avec une majuscule au debut : ");
+    scanf(" %s", nom);
+  }while(nom != "Arcanin");
+
+  if(nom == "Arcanin"){
+    FILE* fichier;
+    fopen = ("arcanin.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+    //appel fontion
+
+}
+
+void create2(FILE* fichier, char* nom_poke){
+
 }
