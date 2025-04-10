@@ -1,0 +1,10 @@
+Arcanin
+90
+110
+80
+95
+Feu
+Flammeche
+Nitrocharge
+Abri
+Feu_Follet
