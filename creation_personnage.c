@@ -1,42 +1,49 @@
-#include "head.h"
+#include "Biblio_lin.h"
+#include <SDL2/SDL.h>
 
 //attaques speciales
 typedef enum{
-  Nitrocharge, Abri, Feu_Follet
-}competence_spe;
+    Nitrocharge, Abri, Feu_Follet
+}Competence_spe;
 
 //attaques de bases
 typedef enum{
-  Flammeche
-}attaque_base;
+    Flammeche
+}Attaque_base;
 
 //statut du pokemon
 typedef enum{
-  Neutre, Brulure, Gel, Empoisonnement, Paralysie, Sommeil
-}statut;
+    Neutre, Brulure, Gel, Empoisonnement, Paralysie, Sommeil, KO
+}Statut;
 
 //les types possibles
 typedef enum{
-  Normal, Feu, Eau, Plante, Electrik, Glace, Combat, Poison, Sol, Vol, Psy, Insecte, Roche, Spectre, Dragon, Tenebres, Acier, Fee
-}type;
-
+    Normal, Feu, Eau, Plante, Electrik, Glace, Combat, Poison, Sol, Vol, Psy, Insecte, Roche, Spectre, Dragon, Tenebres, Acier, Fee
+}Type;
+typedef struct{
+    Competence_spe comp;
+    int cooldown;
+    Type type;
+    int precision;
+}Comp;
 //stats du pokemon
 typedef struct{
-  char nom_poke[30];
-  int numero;
-  int pv_courant;
-  int pv_max;
-  int attaque;
-  int defense;
-  int agilite;
-  int vitesse;
-  statut etat;
-  attaque_base atk1;
-  competence_spe spe1;
-  competence_spe spe2;
-  competence_spe spe3;
-  type t;
-}pokemon;
+    char nom_poke[30];
+    int numero;
+    int pv_courant;
+    int pv_max;
+    int attaque;
+    int defense;
+    int agilite;
+    int vitesse;
+    Statut etat;
+    Attaque_base atk1;
+    Comp spe1;
+    Comp spe2;
+    Comp spe3;
+    Type t;
+    int speedbar;
+}Pokemon;
 
 //ancienne version de la fonction
 pokemon* create_poke(int numero){
