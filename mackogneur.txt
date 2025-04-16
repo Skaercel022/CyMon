@@ -1,0 +1,10 @@
+Mackogneur
+90
+130
+80
+55
+Combat
+Balayage
+Close_combat
+Gonflette
+Poison_croix
