@@ -133,7 +133,7 @@ void crea_comp(Comp* comp, Competence_spe comp_spe) {
   if (comp_spe == Osmerang) {
       comp->cooldownmax = 0;
       comp->type = Sol;
-      comp->puissance = 50;
+      comp->puissance = 70;
       comp->precision = 90;
   }
   if (comp_spe == Queue_de_fer) {
