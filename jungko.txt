@@ -1,0 +1,10 @@
+Jungko
+70
+105
+65
+120
+Plante
+Feuillage
+Giga_sangsue
+Vive_attaque
+Abri
