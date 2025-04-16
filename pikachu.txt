@@ -1,0 +1,10 @@
+Pikachu
+60
+90
+65
+120
+Electrik
+Eclair
+Queue_de_fer
+Cage_eclair
+Repos
