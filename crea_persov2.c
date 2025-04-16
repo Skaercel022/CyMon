@@ -1,0 +1,487 @@
+#include "Biblio_lin.h"
+#include <SDL2/SDL.h>
+//ancienne version de la fonction
+Pokemon* create_poke(int numero){
+  Pokemon* p;
+  char nom[30];
+  do{
+    printf("Rentrez le nom du pokemon choisi avec une majuscule au debut : ");
+    scanf(" %s", nom);
+  }while(nom != "Arcanin");
+
+  if(nom == "Arcanin"){
+    FILE* fichier;
+    fopen = ("arcanin.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+    char nom_fichier[30];
+    int pv, attaque, defense, vitesse;
+    char type_str[20];
+    char atk1_str[20], spe1_str[20], spe2_str[20], spe3_str[20];
+    fscanf(fichier, "%s", nom_fichier);
+    fscanf(fichier, "%d", &pv);
+    fscanf(fichier, "%d", &attaque);
+    fscanf(fichier, "%d", &defense);
+    fscanf(fichier, "%d", &vitesse);
+    fscanf(fichier, "%s", type_str);
+    fscanf(fichier, "%s", atk1_str);
+    fscanf(fichier, "%s", spe1_str);
+    fscanf(fichier, "%s", spe2_str);
+    fscanf(fichier, "%s", spe3_str);
+    fclose(fichier);
+    // Affectation des stats
+    p->pv_courant = pv;
+    p->pv_max = pv;
+    p->attaque = attaque;
+    p->defense = defense;
+    p->vitesse = vitesse;
+    p->agilite = 0;
+    p->etat = Neutre;
+    // Affectation des attaques
+    p->atk1 = Flammeche;
+    // Affectation des compétences spéciales
+    p->spe1 = Nitrocharge;
+    p->spe2 = Abri;
+    p->spe3 = Feu_Follet;
+    // Type du Pokémon
+    p->t = Feu;
+  }
+  return p;
+}
+void crea_comp(Comp* comp, Competence_spe comp_spe) {
+  comp->comp = comp_spe;
+  comp->cooldown = 0;
+
+  if (comp_spe == Nitrocharge) {
+      comp->cooldownmax = 3;
+      comp->type = Feu;
+      comp->puissance = 50;
+      comp->precision = 100;
+  }
+  if (comp_spe == Abri) {
+      comp->cooldownmax = 5;
+      comp->type = Normal;
+      comp->puissance = 0;
+      comp->precision = 0;
+  }
+  if (comp_spe == Feu_Follet) {
+      comp->cooldownmax = 4;
+      comp->type = Feu;
+      comp->puissance = 0;
+      comp->precision = 85;
+  }
+  if (comp_spe == Flammeche) {
+      comp->cooldownmax = 0;
+      comp->type = Feu;
+      comp->puissance = 40;
+      comp->precision = 100;
+  }
+  if (comp_spe == Griffe) {
+      comp->cooldownmax = 0;
+      comp->type = Normal;
+      comp->puissance = 40;
+      comp->precision = 100;
+  }
+  if (comp_spe == Close_Combat) {
+      comp->cooldownmax = 10;
+      comp->type = Combat;
+      comp->puissance = 120;
+      comp->precision = 100;
+  }
+  if (comp_spe == Danse_lame) {
+      comp->cooldownmax = 5;
+      comp->type = Normal;
+      comp->puissance = 0;
+      comp->precision = 100;
+  }
+  if (comp_spe == Aboiement) {
+      comp->cooldownmax = 3;
+      comp->type = Tenebres;
+      comp->puissance = 55;
+      comp->precision = 95;
+  }
+  if (comp_spe == Choc_Mental) {
+      comp->cooldownmax = 0;
+      comp->type = Psy;
+      comp->puissance = 50;
+      comp->precision = 100;
+  }
+  if (comp_spe == Repos) {
+      comp->cooldownmax = 10;
+      comp->type = Psy;
+      comp->puissance = 0;
+      comp->precision = 100;
+  }
+  if (comp_spe == Plenitude) {
+      comp->cooldownmax = 4;
+      comp->type = Psy;
+      comp->puissance = 0;
+      comp->precision = 100;
+  }
+  if (comp_spe == Psyko) {
+      comp->cooldownmax = 5;
+      comp->type = Psy;
+      comp->puissance = 90;
+      comp->precision = 100;
+  }
+  if (comp_spe == Crocs_givre) {
+      comp->cooldownmax = 0;
+      comp->type = Glace;
+      comp->puissance = 65;
+      comp->precision = 95;
+  }
+  if (comp_spe == Laser_glace) {
+      comp->cooldownmax = 5;
+      comp->type = Glace;
+      comp->puissance = 90;
+      comp->precision = 100;
+  }
+  if (comp_spe == Douche_froide) {
+      comp->cooldownmax = 5;
+      comp->type = Glace;
+      comp->puissance = 50;
+      comp->precision = 90;
+  }
+  if (comp_spe == Feuillage) {
+      comp->cooldownmax = 0;
+      comp->type = Plante;
+      comp->puissance = 40;
+      comp->precision = 100;
+  }
+  if (comp_spe == Giga_sangsue) {
+      comp->cooldownmax = 6;
+      comp->type = Plante;
+      comp->puissance = 75;
+      comp->precision = 100;
+  }
+  if (comp_spe == Vive_attaque) {
+      comp->cooldownmax = 2;
+      comp->type = Normal;
+      comp->puissance = 40;
+      comp->precision = 100;
+  }
+  if (comp_spe == Balayage) {
+      comp->cooldownmax = 0;
+      comp->type = Combat;
+      comp->puissance = 65;
+      comp->precision = 100;
+  }
+  if (comp_spe == Gonflette) {
+      comp->cooldownmax = 5;
+      comp->type = Combat;
+      comp->puissance = 0;
+      comp->precision = 100;
+  }
+  if (comp_spe == Poison_croix) {
+      comp->cooldownmax = 3;
+      comp->type = Poison;
+      comp->puissance = 70;
+      comp->precision = 100;
+  }
+  if (comp_spe == Osmerang) {
+      comp->cooldownmax = 0;
+      comp->type = Sol;
+      comp->puissance = 50;
+      comp->precision = 90;
+  }
+  if (comp_spe == Queue_de_fer) {
+      comp->cooldownmax = 6;
+      comp->type = Acier;
+      comp->puissance = 100;
+      comp->precision = 75;
+  }
+  if (comp_spe == Seisme) {
+      comp->cooldownmax = 10;
+      comp->type = Sol;
+      comp->puissance = 100;
+      comp->precision = 100;
+  }
+  if (comp_spe == Mur_de_fer) {
+      comp->cooldownmax = 4;
+      comp->type = Acier;
+      comp->puissance = 0;
+      comp->precision = 100;
+  }
+  if (comp_spe == Eclair) {
+      comp->cooldownmax = 0;
+      comp->type = Electrik;
+      comp->puissance = 40;
+      comp->precision = 100;
+  }
+  if (comp_spe == Cage_eclair) {
+      comp->cooldownmax = 4;
+      comp->type = Electrik;
+      comp->puissance = 0;
+      comp->precision = 90;
+  }
+  if (comp_spe == Pistolet_a_O) {
+      comp->cooldownmax = 0;
+      comp->type = Eau;
+      comp->puissance = 40;
+      comp->precision = 100;
+  }
+  if (comp_spe == Surf) {
+      comp->cooldownmax = 10;
+      comp->type = Eau;
+      comp->puissance = 90;
+      comp->precision = 100;
+  }
+  if (comp_spe == Draco_griffe) {
+      comp->cooldownmax = 0;
+      comp->type = Dragon;
+      comp->puissance = 80;
+      comp->precision = 100;
+  }
+  if (comp_spe == Abattage) {
+      comp->cooldownmax = 6;
+      comp->type = Plante;
+      comp->puissance = 120;
+      comp->precision = 100;
+  }
+  if (comp_spe == Danse_draco) {
+      comp->cooldownmax = 6;
+      comp->type = Dragon;
+      comp->puissance = 0;
+      comp->precision = 100;
+  }
+}
+//on pourrait mettre aussi en arugment de la fonction la structure pokemon pour utiliser son nom
+void create_part2_poke(FILE* file, Pokemon* poke, int* nb){
+  poke->numero=*nb;
+  poke->sleep=0;
+  poke->protec=0;
+  poke->speedbar=0;
+  poke->etat=Neutre;
+  poke->précision=rand%11+90;
+  poke->pv_max=read_ligne_float(file, 2);
+  poke->pv_courant=poke->pv_max;
+  poke->attaque=read_ligne_int(file, 3);
+  poke->defense=read_ligne_int(file, 4);
+  poke->vitesse=read_ligne_int(file, 5);
+  poke->agilite=(poke->vitesse)/5;
+  poke->t=get_type_from_name(read_ligne_char(file, 6));
+  poke->atkbase=crea_comp(poke->atkbase, get_comp_from_name(read_ligne_char(file, 7)));
+  crea_comp(poke->spe1, get_comp_from_name(read_ligne_char(file, 7)));
+  crea_comp(poke->spe2, get_comp_from_name(read_ligne_char(file, 7)));
+  crea_comp(poke->spe3, get_comp_from_name(read_ligne_char(file, 7)));
+}
+
+Pokemon* create_part1_poke_joueur(int* numero){
+  Pokemon* p;
+  char nom[30];
+  do{
+    printf("\nVoici tous les pokemon disponibles : Arcanin, Pikachu, Tortank, Gardevoir, Absol, Mackogneur, Givrali, Jungko, Ossatueur, Tranchodon\n");
+    printf("\nRentrez le nom du pokemon choisi avec une majuscule au debut : ");
+    scanf(" %s", nom);
+  }while(nom != "Arcanin" && nom != "Pikachu" && nom != "Tortank" && nom != "Gardevoir" && nom != "Absol" && nom != "Mackogneur" && nom != "Givrali" && nom != "Jungko" && nom != "Ossatueur" && nom != "Tranchodon" );//g fais des modifs
+  FILE* fichier;
+  p->numero = *numero;
+  (*numero)++;
+  printf("\nVoulez vous lui donnez un surnom (si c'est le cas ecrivez le sinon mettez son nom):");
+  scanf("%s", p->nom_poke);
+  if(nom == "Arcanin"){
+    fichier = fopen("arcanin.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+  }
+  else if(nom == "Pikachu"){
+    fichier = fopen("pikachu.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+  }
+  else if(nom == "Tortank"){
+    fichier = fopen("tortank.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+  }
+  else if(nom == "Absol"){
+    fichier = fopen("absol.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+  }
+  else if(nom == "Gardevoir"){
+    fichier = fopen("gardevoir.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+  }else if(nom == "Givrali"){
+    fichier = fopen("givrali.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+  }
+  else if(nom == "Jungko"){
+    fichier = fopen("jungko.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+  }else if(nom == "Mackogneur"){
+    fichier = fopen("mackogneur.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+  }
+  else if(nom == "Ossatueur"){
+    fichier = fopen("ossatueur.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+  }else if(nom == "Tranchodon"){
+    fichier = fopen("tranchodon.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier\n");
+      exit(1);
+    }
+  }
+  p->nom_poke = nom;
+  create_part2_poke(fichier, p, numero);
+  fclose(fichier);
+  *numero++;
+  return p;
+}
+
+
+Pokemon* create_part1_poke_ordi(int* numero){
+  Pokemon* p;
+  int n;
+  char nom[30];
+  FILE* fichier;
+  p->numero = *numero;
+  (*numero)++;
+  // si on part du principe qu'on ait 10 pokemon
+  n = rand()%10;
+  if(n == 0){
+    fichier = fopen("arcanin.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier \n");
+      exit(1);
+    }
+    fscanf(fichier, "%s", nom);
+    p->nom_poke = nom;
+    create_part2_poke(fichier, p);
+  }
+  else if(n == 1){
+    fichier = fopen("absol.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier \n");
+      exit(1);
+    }
+    fscanf(fichier, "%s", nom);
+    p->nom_poke = nom;
+    create_part2_poke(fichier, p);
+  }
+  else if(n == 2){
+    fichier = fopen("gardevoir.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier \n");
+      exit(1);
+    }
+    fscanf(fichier, "%s", nom);
+    p->nom_poke = nom;
+    create_part2_poke(fichier, p);
+  }
+  else if(n == 3){
+    fichier = fopen("givrali.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier \n");
+      exit(1);
+    }
+    fscanf(fichier, "%s", nom);
+    p->nom_poke = nom;
+    create_part2_poke(fichier, p);
+  }
+  else if(n == 4){
+    fichier = fopen("jungko.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier \n");
+      exit(1);
+    }
+    fscanf(fichier, "%s", nom);
+    p->nom_poke = nom;
+    create_part2_poke(fichier, p);
+  }
+  else if(n == 5){
+    fichier = fopen("mackogneur.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier \n");
+      exit(1);
+    }
+    fscanf(fichier, "%s", nom);
+    p->nom_poke = nom;
+    create_part2_poke(fichier, p);
+  }
+  else if(n == 6){
+    fichier = fopen("ossatueur.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier \n");
+      exit(1);
+    }
+    fscanf(fichier, "%s", nom);
+    p->nom_poke = nom;
+    create_part2_poke(fichier, p);
+  }
+  else if(n == 7){
+    fichier = fopen("pikachu.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier \n");
+      exit(1);
+    }
+    fscanf(fichier, "%s", nom);
+    p->nom_poke = nom;
+    create_part2_poke(fichier, p);
+  }
+  else if(n == 8){
+    fichier = fopen("tortank.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier \n");
+      exit(1);
+    }
+    fscanf(fichier, "%s", nom);
+    p->nom_poke = nom;
+    create_part2_poke(fichier, p);
+  }
+  else if(n == 9){
+    fichier = fopen("tranchodon.txt", "r");
+    if(fichier == NULL){
+      printf("Erreur d'ouverture de fichier \n");
+      exit(1);
+    }
+    fscanf(fichier, "%s", nom);
+    p->nom_poke = nom;
+    create_part2_poke(fichier, p);
+  }
+  fclose(fichier);
+  *numero++;
+  return p;
+}
+
+Pokemon** create_team_joueur(int* numero){
+  Pokemon** team = malloc(3*sizeof(Pokemon*));
+  for(int i = 0; i < 3; i++){
+    team[i] = create_part1_poke_joueur(numero);
+  }
+  return team;
+}
+
+Pokemon** create_team_ordi(int* numero){
+  Pokemon** team = malloc(3*sizeof(Pokemon*));
+  for(int i = 0; i < 3; i++){
+    team[i] = create_part1_poke_ordi(numero);
+  }
+  return team;
+}
