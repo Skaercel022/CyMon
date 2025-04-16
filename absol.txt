@@ -1,8 +1,8 @@
 Absol
-65
-130
-60
-75
+140
+135
+72
+85
 Tenebres
 Griffe
 Close_combat
