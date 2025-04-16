@@ -1,8 +1,8 @@
 Mackogneur
+165
+135
 90
-130
-80
-55
+67
 Combat
 Balayage
 Close_combat
