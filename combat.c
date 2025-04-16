@@ -1,77 +1,4 @@
 #include "Biblio_lin.h"
-#include <SDL2/SDL.h>
-
-//attaques speciales
-typedef enum{
-    Nitrocharge, Abri, Feu_Follet, Flammeche
-}Competence_spe;
-//attaques de bases
-//statut du pokemon
-typedef enum{
-    Neutre, Brulure, Gel, Empoisonnement, Paralysie, Sommeil, KO
-}Statut;
-
-//les types possibles
-typedef enum{
-    Normal, Feu, Eau, Plante, Electrik, Glace, Combat, Poison, Sol, Vol, Psy, Insecte, Roche, Spectre, Dragon, Tenebres, Acier, Fee
-}Type;
-typedef struct{
-    Competence_spe comp;
-    int cooldown;//0 a l'instant t=0s
-    int cooldownmax; //si pp=5 10 tours si 10 5 tours etc
-    Type type;
-    int puissance;
-    int precision;
-}Comp;
-//stats du pokemon
-typedef struct{
-    char nom_poke[30];
-    int numero;
-    float pv_courant;//= a pv_max a l'instant t=0s
-    float pv_max;
-    int attaque;
-    int defense;
-    int agilite;
-    int vitesse;
-    float précision;
-    int protec;//0 a l'instant t=0s
-    int sleep;//0 a l'instant t=0s
-    Statut etat;
-    Comp atkbase;//les attaques de base sont des attaques speciale avec un cooldownn de 0 (par souci de facilite)
-    Comp spe1;
-    Comp spe2;
-    Comp spe3;
-    Type t;
-    int speedbar;//0 a l'instant t=0s
-}Pokemon;
-int compare_chaine(char* un, char* deux){//testé
-    int i=0;
-    int iun=0;
-    int ideux=0;
-    while(un[iun]!='\0'){
-        iun++;
-    }
-    while(deux[ideux]!='\0'){
-        ideux++;
-    }
-    while((un[i]!='\0') && (deux[i]!='\0')){
-        if(un[i]!=deux[i]){
-            return -1;
-        }
-        i++;
-    }
-    if(i==iun && iun==ideux){
-        return 0;
-    }
-    return -1;
-}
-void aff_char(char* tab){
-    int i=0;
-    while(tab[i]!='\0'){
-        printf("%c", tab[i]);
-        i++;
-    }
-}
 float type_effect(Type atk, Type def){
     if(((atk==Normal) && (def==Spectre)) || ((atk==Electrik) && (def==Sol)) || ((atk==Combat) && (def==Spectre)) || ((atk==Poison) && (def==Acier)) || ((atk==Sol) && (def==Vol)) || ((atk==Psy) && (def==Tenebres)) || ((atk==Spectre) && (def==Normal)) || ((atk==Dragon) && (def==Fee))){
         return 0.0;
@@ -90,15 +17,6 @@ float type_effect(Type atk, Type def){
     }
     else {
         return 1.0;
-    }
-}
-
-char* get_comp_name(Competence_spe comp){
-    switch(comp){
-        case Nitrocharge: return "Nitrocharge";
-        case Abri: return "Abri";
-        case Feu_Follet: return "Feu_Follet";
-        default: return "Inconnu";
     }
 }
 void aff_effect_atk(Competence_spe atk) {
@@ -219,7 +137,7 @@ Comp choix_atk(Pokemon* bu){//à testé
 }
 int attaque_esquivee(Comp atk, Pokemon* attaque, Pokemon* defend){
     int alea=rand()%100+1;
-    if(alea> (atk.precision*(attaque[0].précision/defend[0].agilite))){
+    else if(alea> (atk.precision*(attaque[0].précision/defend[0].agilite))){
         printf("\n");
         aff_char(defend->nom_poke);
         return 0;
@@ -239,7 +157,7 @@ float degats(Pokemon* attaquant, Pokemon* defenseur, Comp atk){
         printf("\n");
         aff_char(defenseur->nom_poke);
         printf(" se protege");
-        defenseur->protec=0;
+        defenseur->protec=1;
         return 0.0;
     }//else if a rajouter
     else{
@@ -349,6 +267,13 @@ void effect_atk_bot(Pokemon* offense, Pokemon** team, Pokemon** adversaires){
     printf(" sur ");
     aff_char(cible->nom_poke);
     x=degats(offense, cible, choix);
+    if(cible->protec==1){
+        printf("\n\n");
+        aff_char(cible->nom_poke);
+        x=0;
+        printf(" s'est protege");
+        cible->protec=0;
+    }
     if(offense->sleep>0){
         printf("\n");
         aff_char(offense->nom_poke);
@@ -376,12 +301,18 @@ void effect_atk_bot(Pokemon* offense, Pokemon** team, Pokemon** adversaires){
         printf(" est paralyse il n'a pas pu attaque");
         x=0;
     }
-    else if(x==0){
+    else if(x==0 && choix.comp!=Abri){
         printf("\nL'attaque a echoue ou a ete esquive");
     }
+    
     effet_spe(offense, cible, choix);
     printf("\n");
     aff_char(cible->nom_poke);
+    if(cible->protec==1){
+        x=0;
+        printf(" s'est protege");
+        cible->protec=0;
+    }
     if(offense->etat==Brulure){
         printf(" a prit %d degats", x/2);//a retiré outils de dev
         cible[0].pv_courant=cible[0].pv_courant-(x/2);
@@ -405,11 +336,6 @@ void effect_atk(Pokemon* offense, Pokemon** team, Pokemon** adversaires, Comp at
     int aleagel=rand()%100+1;
     Pokemon* cible;
     int i=0;
-    if(aleapara<26){
-        printf("\n");
-        aff_char(offense->nom_poke);
-        printf(" est parlyse il n'a pas pu attaque");
-    }
     atk.cooldown=atk.cooldownmax;
     do{
         if(atk.comp==Abri){
@@ -467,6 +393,12 @@ void effect_atk(Pokemon* offense, Pokemon** team, Pokemon** adversaires, Comp at
     printf(" utilise ");
     aff_atk(atk.comp);
     x=degats(offense, cible, atk);
+    if(aleapara<26){
+        printf("\n");
+        aff_char(offense->nom_poke);
+        printf(" est parlyse il n'a pas pu attaque");
+        x=0;
+    }
     if(offense->sleep>0){
         printf("\n");
         aff_char(offense->nom_poke);
@@ -494,7 +426,7 @@ void effect_atk(Pokemon* offense, Pokemon** team, Pokemon** adversaires, Comp at
         printf(" est paralyse il n'a pas pu attaque");
         x=0;
     }
-    else if(x==0){
+    else if(x==0 && atk!=Abri){
         printf("\nL'attaque a echoue ou a ete esquive");
     }
     effet_spe(offense, cible, atk);
@@ -581,73 +513,4 @@ int fight(Pokemon** player, Pokemon** bot){//rajouter un srand dans le main
         printf("Hahaha t'as perdu t'es trop nul Bouhhh");
         return -1;
     }
-}
-int main() {
-    srand(time(NULL));
-
-    // Créer 3 Pokémon pour le joueur
-    Pokemon pikachu = {
-        .nom_poke = "Pikachu", .pv_max = 100, .pv_courant = 100,
-        .attaque = 55, .defense = 40, .vitesse = 90, .précision = 1.0, .etat = Neutre,
-        .spe1 = { Nitrocharge, 0, 3, Electrik, 50, 95 },
-        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
-        .spe3 = { Feu_Follet, 0, 5, Feu, 0, 90 },
-        .t = Electrik, .speedbar = 0
-    };
-
-    Pokemon bulbizarre = {
-        .nom_poke = "Bulbizarre", .pv_max = 120, .pv_courant = 120,
-        .attaque = 49, .defense = 49, .vitesse = 45, .précision = 1.0, .etat = Neutre,
-        .spe1 = { Feu_Follet, 0, 3, Plante, 0, 90 },
-        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
-        .spe3 = { Nitrocharge, 0, 5, Plante, 50, 90 },
-        .t = Plante, .speedbar = 0
-    };
-
-    Pokemon carapuce = {
-        .nom_poke = "Carapuce", .pv_max = 110, .pv_courant = 110,
-        .attaque = 48, .defense = 65, .vitesse = 43, .précision = 1.0, .etat = Neutre,
-        .spe1 = { Nitrocharge, 0, 3, Eau, 40, 95 },
-        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
-        .spe3 = { Feu_Follet, 0, 5, Eau, 0, 90 },
-        .t = Eau, .speedbar = 0
-    };
-
-    // Créer 3 Pokémon pour le bot
-    Pokemon salameche = {
-        .nom_poke = "Salameche", .pv_max = 100, .pv_courant = 100,
-        .attaque = 52, .defense = 43, .vitesse = 65, .précision = 1.0, .etat = Neutre,
-        .spe1 = { Nitrocharge, 0, 3, Feu, 50, 95 },
-        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
-        .spe3 = { Feu_Follet, 0, 5, Feu, 0, 85 },
-        .t = Feu, .speedbar = 0
-    };
-
-    Pokemon mystherbe = {
-        .nom_poke = "Mystherbe", .pv_max = 90, .pv_courant = 90,
-        .attaque = 50, .defense = 55, .vitesse = 30, .précision = 1.0, .etat = Neutre,
-        .spe1 = { Nitrocharge, 0, 3, Plante, 40, 95 },
-        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
-        .spe3 = { Feu_Follet, 0, 5, Plante, 0, 90 },
-        .t = Plante, .speedbar = 0
-    };
-
-    Pokemon racaillou = {
-        .nom_poke = "Racaillou", .pv_max = 130, .pv_courant = 130,
-        .attaque = 80, .defense = 100, .vitesse = 20, .précision = 1.0, .etat = Neutre,
-        .spe1 = { Nitrocharge, 0, 3, Roche, 60, 90 },
-        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
-        .spe3 = { Feu_Follet, 0, 5, Sol, 0, 80 },
-        .t = Roche, .speedbar = 0
-    };
-
-    // Création des équipes (tableaux de pointeurs)
-    Pokemon* team[3] = { &pikachu, &bulbizarre, &carapuce };
-    Pokemon* bot[3] = { &salameche, &mystherbe, &racaillou };
-
-    printf("\n=== DEBUT DU COMBAT ===\n");
-    fight(team, bot);
-    printf("\n=== FIN DU COMBAT ===\n");
-
-    return 0;
 }
