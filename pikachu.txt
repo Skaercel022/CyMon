@@ -1,8 +1,8 @@
 Pikachu
-60
-90
-65
-120
+135
+99
+67
+117
 Electrik
 Eclair
 Queue_de_fer
