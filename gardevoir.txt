@@ -1,8 +1,8 @@
 Gardevoir
-68
-125
-65
-80
+143
+130
+76
+90
 Psy
 Choc_mental
 Repos
