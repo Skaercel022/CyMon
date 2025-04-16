@@ -1,8 +1,8 @@
 Ossatueur
-60
-80
-110
-45
+135
+90
+117
+58
 Sol
 Osmerang
 Queue_de_fer
