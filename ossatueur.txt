@@ -1,0 +1,10 @@
+Ossatueur
+60
+80
+110
+45
+Sol
+Osmerang
+Queue_de_fer
+Seisme
+Mur_de_fer
