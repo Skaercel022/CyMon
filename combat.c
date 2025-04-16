@@ -274,44 +274,63 @@ void effet_spe(Pokemon* attaquant, Pokemon* defenseur, Comp atk){
         }
     }
 }
-void maj_damage(Pokemon* offense, Pokemon** team, Pokemon** adversaires){
+Comp maj_damage(Pokemon* offense, Pokemon** team, Pokemon** adversaires, Pokemon* cible){
     Comp* result;
-    Pokemon* cible;
+    Pokemon* cible2;
+    
     int max=0;
     for(int j=0; j<3; j++){
         if(degats(offense, adversaires[j], offense->atkbase)>max){
-
+            result=&offense->atkbase;
+            cible2=adversaires[j];
+        }
+        if((degats(offense, adversaires[j], offense->spe1)>max) && offense->spe1.cooldown==0){
+            result=&offense->spe1;
+            cible2=adversaires[j];
+        }
+        if((degats(offense, adversaires[j], offense->spe2)>max) && offense->spe2.cooldown==0){
+            result=&offense->spe2;
+            cible2=adversaires[j];
+        }
+        if((degats(offense, adversaires[j], offense->spe3)>max) && offense->spe3.cooldown==0){
+            result=&offense->spe3;
+            cible2=adversaires[j];
         }
     }
+    if(cible->précision==-1){
+        cible=cible2;
+    }
+    return *result;
 }
 void effect_atk_bot(Pokemon* offense, Pokemon** team, Pokemon** adversaires){
     int x=0;
-    int alea;
     int aleapara=rand()%100+1;
     int aleagel=rand()%100+1;
+    printf("\n\n%s", (*offense).nom_poke);
     Pokemon* cible;
     Comp choix;
+    choix.precision=-1;
     for(int j=0; j<3; j++){
         if(((degats(offense, adversaires[j], offense->atkbase))>adversaires[j]->pv_courant) && (adversaires[j]->pv_courant>0)){
             cible=adversaires[j];
             choix=offense->atkbase;
         }
     }
-    if(choix=NULL){
+    if(choix.precision==-1){
         for(int j=0; j<3; j++){
             if(((degats(offense, adversaires[j], offense->spe1)>adversaires[j]->pv_courant && offense->spe1.cooldown==0)) && (adversaires[j]->pv_courant>0)){
                 cible=adversaires[j];
                 choix=offense->spe1;
             }
         }
-        if(choix=NULL){
+        if(choix.precision==-1){
             for(int j=0; j<3; j++){
                 if(((degats(offense, adversaires[j], offense->spe2)>adversaires[j]->pv_courant && offense->spe2.cooldown==0)) && (adversaires[j]->pv_courant>0)){
                     cible=adversaires[j];
                     choix=offense->spe2;
                 }
             }
-            if(choix=NULL){
+            if(choix.precision==-1){
                 for(int j=0; j<3; j++){
                     if(((degats(offense, adversaires[j], offense->spe3)>adversaires[j]->pv_courant && offense->spe3.cooldown==0)) && (adversaires[j]->pv_courant>0)){
                         cible=adversaires[j];
@@ -321,14 +340,19 @@ void effect_atk_bot(Pokemon* offense, Pokemon** team, Pokemon** adversaires){
             }
         }
     }
+    
+    choix=maj_damage(offense, team, adversaires, cible);
+    printf("\n");
     aff_char(offense->nom_poke);
     printf(" utilise ");
     aff_atk(choix.comp);
+    printf(" sur ");
+    aff_char(cible->nom_poke);
     x=degats(offense, cible, choix);
     if(offense->sleep>0){
         printf("\n");
         aff_char(offense->nom_poke);
-        printf("dort il n'a pas pu attaque");
+        printf(" dort il n'a pas pu attaque");
         offense->sleep=offense->sleep-1;
         if(offense->sleep=0){
             offense->etat=Neutre;
@@ -338,18 +362,18 @@ void effect_atk_bot(Pokemon* offense, Pokemon** team, Pokemon** adversaires){
     if(aleagel>20){
         printf("\n");
         aff_char(offense->nom_poke);
-        printf("est gele il n'a pas pu attaque");
+        printf(" est gele il n'a pas pu attaque");
         x=0;
     }
     else{
         printf("\n");
         aff_char(offense->nom_poke);
-        printf("n'est plus gele");
+        printf(" n'est plus gele");
     }
     if(aleapara<26){
         printf("\n");
         aff_char(offense->nom_poke);
-        printf("est paralyse il n'a pas pu attaque");
+        printf(" est paralyse il n'a pas pu attaque");
         x=0;
     }
     else if(x==0){
@@ -384,7 +408,7 @@ void effect_atk(Pokemon* offense, Pokemon** team, Pokemon** adversaires, Comp at
     if(aleapara<26){
         printf("\n");
         aff_char(offense->nom_poke);
-        printf("est parlise il n'a pas pu attaque");
+        printf(" est parlyse il n'a pas pu attaque");
     }
     atk.cooldown=atk.cooldownmax;
     do{
@@ -456,18 +480,18 @@ void effect_atk(Pokemon* offense, Pokemon** team, Pokemon** adversaires, Comp at
     if(aleagel>20){
         printf("\n");
         aff_char(offense->nom_poke);
-        printf("est gele il n'a pas pu attaque");
+        printf(" est gele il n'a pas pu attaque");
         x=0;
     }
     else{
         printf("\n");
         aff_char(offense->nom_poke);
-        printf("n'est plus gele");
+        printf(" n'est plus gele");
     }
     if(aleapara<26){
         printf("\n");
         aff_char(offense->nom_poke);
-        printf("est paralyse il n'a pas pu attaque");
+        printf(" est paralyse il n'a pas pu attaque");
         x=0;
     }
     else if(x==0){
@@ -524,7 +548,14 @@ void effect_status(Pokemon* poke, int nbtour){
     if(poke->etat==Brulure){
         printf("\n");
         aff_char(poke->nom_poke);
-        printf(" est brule\n il ")
+        printf(" est brule\n il prend des degats");
+        poke->pv_courant=poke->pv_courant-(poke->pv_max/16);
+    }
+    if(poke->etat==Empoisonnement){
+        printf("\n");
+        aff_char(poke->nom_poke);
+        printf(" est empoisonne\n il prend des degats");
+        poke->pv_courant=poke->pv_courant-((nbtour*(poke->pv_max))/16);
     }
 }
 int fight(Pokemon** player, Pokemon** bot){//rajouter un srand dans le main
@@ -532,11 +563,12 @@ int fight(Pokemon** player, Pokemon** bot){//rajouter un srand dans le main
         speedbarplus(player[0], player[1], player[2], bot[0], bot[1], bot[2]);
         if(plus1000(*(player[0]), *(player[1]), *(player[2]), *(bot[0]), *(bot[1]), *(bot[2]))==1){
             cooldownmatch(player, bot);
+            printf("\n\n\n");
             if(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])==player[0] || maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])==player[1] || maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])==player[2]){
                 effect_atk(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), player, bot, choix_atk(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])));
             }
             else{
-
+                effect_atk_bot(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), bot, player);
             }
             (maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])->speedbar)=0;
         }
@@ -549,4 +581,73 @@ int fight(Pokemon** player, Pokemon** bot){//rajouter un srand dans le main
         printf("Hahaha t'as perdu t'es trop nul Bouhhh");
         return -1;
     }
+}
+int main() {
+    srand(time(NULL));
+
+    // Créer 3 Pokémon pour le joueur
+    Pokemon pikachu = {
+        .nom_poke = "Pikachu", .pv_max = 100, .pv_courant = 100,
+        .attaque = 55, .defense = 40, .vitesse = 90, .précision = 1.0, .etat = Neutre,
+        .spe1 = { Nitrocharge, 0, 3, Electrik, 50, 95 },
+        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
+        .spe3 = { Feu_Follet, 0, 5, Feu, 0, 90 },
+        .t = Electrik, .speedbar = 0
+    };
+
+    Pokemon bulbizarre = {
+        .nom_poke = "Bulbizarre", .pv_max = 120, .pv_courant = 120,
+        .attaque = 49, .defense = 49, .vitesse = 45, .précision = 1.0, .etat = Neutre,
+        .spe1 = { Feu_Follet, 0, 3, Plante, 0, 90 },
+        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
+        .spe3 = { Nitrocharge, 0, 5, Plante, 50, 90 },
+        .t = Plante, .speedbar = 0
+    };
+
+    Pokemon carapuce = {
+        .nom_poke = "Carapuce", .pv_max = 110, .pv_courant = 110,
+        .attaque = 48, .defense = 65, .vitesse = 43, .précision = 1.0, .etat = Neutre,
+        .spe1 = { Nitrocharge, 0, 3, Eau, 40, 95 },
+        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
+        .spe3 = { Feu_Follet, 0, 5, Eau, 0, 90 },
+        .t = Eau, .speedbar = 0
+    };
+
+    // Créer 3 Pokémon pour le bot
+    Pokemon salameche = {
+        .nom_poke = "Salameche", .pv_max = 100, .pv_courant = 100,
+        .attaque = 52, .defense = 43, .vitesse = 65, .précision = 1.0, .etat = Neutre,
+        .spe1 = { Nitrocharge, 0, 3, Feu, 50, 95 },
+        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
+        .spe3 = { Feu_Follet, 0, 5, Feu, 0, 85 },
+        .t = Feu, .speedbar = 0
+    };
+
+    Pokemon mystherbe = {
+        .nom_poke = "Mystherbe", .pv_max = 90, .pv_courant = 90,
+        .attaque = 50, .defense = 55, .vitesse = 30, .précision = 1.0, .etat = Neutre,
+        .spe1 = { Nitrocharge, 0, 3, Plante, 40, 95 },
+        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
+        .spe3 = { Feu_Follet, 0, 5, Plante, 0, 90 },
+        .t = Plante, .speedbar = 0
+    };
+
+    Pokemon racaillou = {
+        .nom_poke = "Racaillou", .pv_max = 130, .pv_courant = 130,
+        .attaque = 80, .defense = 100, .vitesse = 20, .précision = 1.0, .etat = Neutre,
+        .spe1 = { Nitrocharge, 0, 3, Roche, 60, 90 },
+        .spe2 = { Abri, 0, 4, Normal, 0, 100 },
+        .spe3 = { Feu_Follet, 0, 5, Sol, 0, 80 },
+        .t = Roche, .speedbar = 0
+    };
+
+    // Création des équipes (tableaux de pointeurs)
+    Pokemon* team[3] = { &pikachu, &bulbizarre, &carapuce };
+    Pokemon* bot[3] = { &salameche, &mystherbe, &racaillou };
+
+    printf("\n=== DEBUT DU COMBAT ===\n");
+    fight(team, bot);
+    printf("\n=== FIN DU COMBAT ===\n");
+
+    return 0;
 }
