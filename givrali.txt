@@ -1,8 +1,8 @@
 Givrali
-65
-130
-110
-65
+140
+135
+117
+76
 Crocs_givre
 Laser_glace
 Douche_froide
