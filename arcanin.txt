@@ -1,8 +1,8 @@
 Arcanin
+165
+117
 90
-110
-80
-95
+103
 Feu
 Flammeche
 Nitrocharge
