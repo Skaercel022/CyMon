@@ -1,55 +1,5 @@
 #include "Biblio_lin.h"
-#include <SDL2/SDL.h>
-//ancienne version de la fonction
-Pokemon* create_poke(int numero){
-  Pokemon* p;
-  char nom[30];
-  do{
-    printf("Rentrez le nom du pokemon choisi avec une majuscule au debut : ");
-    scanf(" %s", nom);
-  }while(nom != "Arcanin");
-
-  if(nom == "Arcanin"){
-    FILE* fichier;
-    fopen = ("arcanin.txt", "r");
-    if(fichier == NULL){
-      printf("Erreur d'ouverture de fichier\n");
-      exit(1);
-    }
-    char nom_fichier[30];
-    int pv, attaque, defense, vitesse;
-    char type_str[20];
-    char atk1_str[20], spe1_str[20], spe2_str[20], spe3_str[20];
-    fscanf(fichier, "%s", nom_fichier);
-    fscanf(fichier, "%d", &pv);
-    fscanf(fichier, "%d", &attaque);
-    fscanf(fichier, "%d", &defense);
-    fscanf(fichier, "%d", &vitesse);
-    fscanf(fichier, "%s", type_str);
-    fscanf(fichier, "%s", atk1_str);
-    fscanf(fichier, "%s", spe1_str);
-    fscanf(fichier, "%s", spe2_str);
-    fscanf(fichier, "%s", spe3_str);
-    fclose(fichier);
-    // Affectation des stats
-    p->pv_courant = pv;
-    p->pv_max = pv;
-    p->attaque = attaque;
-    p->defense = defense;
-    p->vitesse = vitesse;
-    p->agilite = 0;
-    p->etat = Neutre;
-    // Affectation des attaques
-    p->atk1 = Flammeche;
-    // Affectation des compétences spéciales
-    p->spe1 = Nitrocharge;
-    p->spe2 = Abri;
-    p->spe3 = Feu_Follet;
-    // Type du Pokémon
-    p->t = Feu;
-  }
-  return p;
-}
+#include "creapers.h"
 void crea_comp(Comp* comp, Competence_spe comp_spe) {
   comp->comp = comp_spe;
   comp->cooldown = 0;
@@ -165,7 +115,7 @@ void crea_comp(Comp* comp, Competence_spe comp_spe) {
   if (comp_spe == Balayage) {
       comp->cooldownmax = 0;
       comp->type = Combat;
-      comp->puissance = 65;
+      comp->puissance = 40;
       comp->precision = 100;
   }
   if (comp_spe == Gonflette) {
@@ -254,7 +204,7 @@ void create_part2_poke(FILE* file, Pokemon* poke, int* nb){
   poke->protec=0;
   poke->speedbar=0;
   poke->etat=Neutre;
-  poke->précision=rand%11+90;
+  poke->précision=rand()%11+90;
   poke->pv_max=read_ligne_float(file, 2);
   poke->pv_courant=poke->pv_max;
   poke->attaque=read_ligne_int(file, 3);
@@ -262,102 +212,113 @@ void create_part2_poke(FILE* file, Pokemon* poke, int* nb){
   poke->vitesse=read_ligne_int(file, 5);
   poke->agilite=(poke->vitesse)/5;
   poke->t=get_type_from_name(read_ligne_char(file, 6));
-  poke->atkbase=crea_comp(poke->atkbase, get_comp_from_name(read_ligne_char(file, 7)));
-  crea_comp(poke->spe1, get_comp_from_name(read_ligne_char(file, 7)));
-  crea_comp(poke->spe2, get_comp_from_name(read_ligne_char(file, 7)));
-  crea_comp(poke->spe3, get_comp_from_name(read_ligne_char(file, 7)));
+  crea_comp(&(poke->atkbase), get_comp_from_name(read_ligne_char(file, 7)));
+  crea_comp(&(poke->spe1), get_comp_from_name(read_ligne_char(file, 8)));
+  crea_comp(&(poke->spe2), get_comp_from_name(read_ligne_char(file, 9)));
+  crea_comp(&(poke->spe3), get_comp_from_name(read_ligne_char(file, 10)));
 }
 
 Pokemon* create_part1_poke_joueur(int* numero){
-  Pokemon* p;
-  char nom[30];
+  Pokemon* p = malloc(sizeof(Pokemon));
+  char* nom=malloc(30*sizeof(char));
+  char* name=malloc(30*sizeof(char));
+  FILE* fichier;
+  if (!p) {
+    printf("Erreur d'allocation mémoire\n");
+    exit(1);
+  }
   do{
-    printf("\nVoici tous les pokemon disponibles : Arcanin, Pikachu, Tortank, Gardevoir, Absol, Mackogneur, Givrali, Jungko, Ossatueur, Tranchodon\n");
+    printf("\nVoici tous les pokemon disponibles : \n-Arcanin\n-Pikachu\n-Tortank\n-Gardevoir\n-Absol\n-Mackogneur\n-Givrali\n-Jungko\n-Ossatueur\n-Tranchodon\n");
     printf("\nRentrez le nom du pokemon choisi avec une majuscule au debut : ");
     scanf(" %s", nom);
-  }while(nom != "Arcanin" && nom != "Pikachu" && nom != "Tortank" && nom != "Gardevoir" && nom != "Absol" && nom != "Mackogneur" && nom != "Givrali" && nom != "Jungko" && nom != "Ossatueur" && nom != "Tranchodon" );//g fais des modifs
-  FILE* fichier;
+  }while(compare_chaine("Arcanin", nom)!=0 && compare_chaine("Pikachu", nom)!=0 && compare_chaine("Tortank", nom)!=0 && compare_chaine("Gardevoir", nom)!=0 && compare_chaine("Absol", nom)!=0 && compare_chaine("Mackogneur", nom)!=0 && compare_chaine("Givrali", nom)!=0 && compare_chaine("Jungko", nom)!=0 && compare_chaine("Ossatueur", nom)!=0 && compare_chaine("Tranchodon", nom)!=0 );//g fais des modifs
   p->numero = *numero;
   (*numero)++;
   printf("\nVoulez vous lui donnez un surnom (si c'est le cas ecrivez le sinon mettez son nom):");
-  scanf("%s", p->nom_poke);
-  if(nom == "Arcanin"){
+  scanf("%s", name);
+  if(compare_chaine("Arcanin", nom)==0){
     fichier = fopen("arcanin.txt", "r");
     if(fichier == NULL){
       printf("Erreur d'ouverture de fichier\n");
       exit(1);
     }
   }
-  else if(nom == "Pikachu"){
+  else if(compare_chaine("Pikachu", nom)==0){
     fichier = fopen("pikachu.txt", "r");
     if(fichier == NULL){
       printf("Erreur d'ouverture de fichier\n");
       exit(1);
     }
   }
-  else if(nom == "Tortank"){
+  else if(compare_chaine("Tortank", nom)==0){
     fichier = fopen("tortank.txt", "r");
     if(fichier == NULL){
       printf("Erreur d'ouverture de fichier\n");
       exit(1);
     }
   }
-  else if(nom == "Absol"){
+  else if(compare_chaine("Absol", nom)==0){
     fichier = fopen("absol.txt", "r");
     if(fichier == NULL){
       printf("Erreur d'ouverture de fichier\n");
       exit(1);
     }
   }
-  else if(nom == "Gardevoir"){
+  else if(compare_chaine("Gardevoir", nom)==0){
     fichier = fopen("gardevoir.txt", "r");
     if(fichier == NULL){
       printf("Erreur d'ouverture de fichier\n");
       exit(1);
     }
-  }else if(nom == "Givrali"){
+  }else if(compare_chaine("Givrali", nom)==0){
     fichier = fopen("givrali.txt", "r");
     if(fichier == NULL){
       printf("Erreur d'ouverture de fichier\n");
       exit(1);
     }
   }
-  else if(nom == "Jungko"){
+  else if(compare_chaine("Jungko", nom)==0){
     fichier = fopen("jungko.txt", "r");
     if(fichier == NULL){
       printf("Erreur d'ouverture de fichier\n");
       exit(1);
     }
-  }else if(nom == "Mackogneur"){
+  }else if(compare_chaine("Mackogneur", nom)==0){
     fichier = fopen("mackogneur.txt", "r");
     if(fichier == NULL){
       printf("Erreur d'ouverture de fichier\n");
       exit(1);
     }
   }
-  else if(nom == "Ossatueur"){
+  else if(compare_chaine("Ossatueur", nom)==0){
     fichier = fopen("ossatueur.txt", "r");
     if(fichier == NULL){
       printf("Erreur d'ouverture de fichier\n");
       exit(1);
     }
-  }else if(nom == "Tranchodon"){
+  }else if(compare_chaine("Tranchodon", nom)==0){
     fichier = fopen("tranchodon.txt", "r");
     if(fichier == NULL){
       printf("Erreur d'ouverture de fichier\n");
       exit(1);
     }
   }
-  p->nom_poke = nom;
+  for(int k=0; k<30; k++){
+    p->nom_poke[k] = name[k];
+  }
   create_part2_poke(fichier, p, numero);
   fclose(fichier);
-  *numero++;
+  (*numero)++;
   return p;
 }
 
 
 Pokemon* create_part1_poke_ordi(int* numero){
-  Pokemon* p;
+  Pokemon* p = malloc(sizeof(Pokemon));
+  if (!p) {
+    printf("Erreur d'allocation mémoire\n");
+    exit(1);
+  }
   int n;
   char nom[30];
   FILE* fichier;
@@ -372,8 +333,10 @@ Pokemon* create_part1_poke_ordi(int* numero){
       exit(1);
     }
     fscanf(fichier, "%s", nom);
-    p->nom_poke = nom;
-    create_part2_poke(fichier, p);
+    for(int k=0; k<30; k++){
+        p->nom_poke[k] = nom[k];
+    }
+    create_part2_poke(fichier, p, numero);
   }
   else if(n == 1){
     fichier = fopen("absol.txt", "r");
@@ -382,8 +345,10 @@ Pokemon* create_part1_poke_ordi(int* numero){
       exit(1);
     }
     fscanf(fichier, "%s", nom);
-    p->nom_poke = nom;
-    create_part2_poke(fichier, p);
+    for(int k=0; k<30; k++){
+        p->nom_poke[k] = nom[k];
+    }
+    create_part2_poke(fichier, p, numero);
   }
   else if(n == 2){
     fichier = fopen("gardevoir.txt", "r");
@@ -392,8 +357,10 @@ Pokemon* create_part1_poke_ordi(int* numero){
       exit(1);
     }
     fscanf(fichier, "%s", nom);
-    p->nom_poke = nom;
-    create_part2_poke(fichier, p);
+    for(int k=0; k<30; k++){
+        p->nom_poke[k] = nom[k];
+    }
+    create_part2_poke(fichier, p, numero);
   }
   else if(n == 3){
     fichier = fopen("givrali.txt", "r");
@@ -402,8 +369,10 @@ Pokemon* create_part1_poke_ordi(int* numero){
       exit(1);
     }
     fscanf(fichier, "%s", nom);
-    p->nom_poke = nom;
-    create_part2_poke(fichier, p);
+    for(int k=0; k<30; k++){
+        p->nom_poke[k] = nom[k];
+    }
+    create_part2_poke(fichier, p, numero);
   }
   else if(n == 4){
     fichier = fopen("jungko.txt", "r");
@@ -412,8 +381,10 @@ Pokemon* create_part1_poke_ordi(int* numero){
       exit(1);
     }
     fscanf(fichier, "%s", nom);
-    p->nom_poke = nom;
-    create_part2_poke(fichier, p);
+    for(int k=0; k<30; k++){
+        p->nom_poke[k] = nom[k];
+    }
+    create_part2_poke(fichier, p, numero);
   }
   else if(n == 5){
     fichier = fopen("mackogneur.txt", "r");
@@ -422,8 +393,10 @@ Pokemon* create_part1_poke_ordi(int* numero){
       exit(1);
     }
     fscanf(fichier, "%s", nom);
-    p->nom_poke = nom;
-    create_part2_poke(fichier, p);
+    for(int k=0; k<30; k++){
+        p->nom_poke[k] = nom[k];
+    }
+    create_part2_poke(fichier, p, numero);
   }
   else if(n == 6){
     fichier = fopen("ossatueur.txt", "r");
@@ -432,8 +405,10 @@ Pokemon* create_part1_poke_ordi(int* numero){
       exit(1);
     }
     fscanf(fichier, "%s", nom);
-    p->nom_poke = nom;
-    create_part2_poke(fichier, p);
+    for(int k=0; k<30; k++){
+        p->nom_poke[k] = nom[k];
+    }
+    create_part2_poke(fichier, p, numero);
   }
   else if(n == 7){
     fichier = fopen("pikachu.txt", "r");
@@ -442,8 +417,10 @@ Pokemon* create_part1_poke_ordi(int* numero){
       exit(1);
     }
     fscanf(fichier, "%s", nom);
-    p->nom_poke = nom;
-    create_part2_poke(fichier, p);
+    for(int k=0; k<30; k++){
+        p->nom_poke[k] = nom[k];
+    }
+    create_part2_poke(fichier, p, numero);
   }
   else if(n == 8){
     fichier = fopen("tortank.txt", "r");
@@ -452,8 +429,10 @@ Pokemon* create_part1_poke_ordi(int* numero){
       exit(1);
     }
     fscanf(fichier, "%s", nom);
-    p->nom_poke = nom;
-    create_part2_poke(fichier, p);
+    for(int k=0; k<30; k++){
+        p->nom_poke[k] = nom[k];
+    }
+    create_part2_poke(fichier, p, numero);
   }
   else if(n == 9){
     fichier = fopen("tranchodon.txt", "r");
@@ -462,11 +441,13 @@ Pokemon* create_part1_poke_ordi(int* numero){
       exit(1);
     }
     fscanf(fichier, "%s", nom);
-    p->nom_poke = nom;
-    create_part2_poke(fichier, p);
+    for(int k=0; k<30; k++){
+        p->nom_poke[k] = nom[k];
+    }
+    create_part2_poke(fichier, p, numero);
   }
   fclose(fichier);
-  *numero++;
+  (*numero)++;
   return p;
 }
 
