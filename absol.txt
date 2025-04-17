@@ -5,6 +5,6 @@ Absol
 85
 Tenebres
 Griffe
-Close_combat
+Close_Combat
 Danse_lame
 Aboiement
