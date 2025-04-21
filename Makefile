@@ -1,17 +1,39 @@
-#Programme à créer
-PROG = projet
+# Nom de l'exécutable
+TARGET = cymon
 
-#Sources
-SRC = main.c creation_personnage.c combat.c affichage.c
+# Fichiers source
+SRC = main.c Biblio_lin.c crea_persov2.c combat.c
 
-#Regle par defaut
-all: $(PROG)
-	./$(PROG)
+# Fichiers objets (.o)
+OBJ = $(SRC:.c=.o)
 
-#compilation
-$(PROG): $(SRC) head.h
-	gcc -o $(PROG) $(SRC)
+# En-têtes
+HEADERS = Biblio_lin.h creapers.h combat.h
 
-#Nettoyage
-clean :
-rm -f $(PROG)
+# Compilateur
+CC = gcc
+
+# Options de compilation
+CFLAGS = -Wall -Wextra -g
+
+# Librairies (SDL2 ou autre si besoin)
+LDFLAGS = $(shell sdl2-config --libs)
+INCLUDES = $(shell sdl2-config --cflags)
+
+# Règle par défaut
+all: $(TARGET)
+
+# Création de l'exécutable
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+# Compilation des .o
+%.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Nettoyage
+clean:
+	rm -f $(OBJ) $(TARGET)
+
+# Pour forcer re-compilation
+re: clean all
