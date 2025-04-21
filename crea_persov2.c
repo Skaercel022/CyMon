@@ -14,7 +14,7 @@ void crea_comp(Comp* comp, Competence_spe comp_spe) {
       comp->cooldownmax = 5;
       comp->type = Normal;
       comp->puissance = 0;
-      comp->precision = 0;
+      comp->precision = 100;
   }
   if (comp_spe == Feu_Follet) {
       comp->cooldownmax = 4;
@@ -235,7 +235,7 @@ Pokemon* create_part1_poke_joueur(int* numero){
   p->numero = *numero;
   (*numero)++;
   printf("\nVoulez vous lui donnez un surnom (si c'est le cas ecrivez le sinon mettez son nom):");
-  scanf("%s", name);
+  scanf("%30s", name);
   if(compare_chaine("Arcanin", nom)==0){
     fichier = fopen("arcanin.txt", "r");
     if(fichier == NULL){
