@@ -16,12 +16,12 @@ void afficher_pokemon(Pokemon* poke) {
     char* etat_str;
     switch (poke->etat) {
         case Neutre: etat_str = "Neutre"; break;
-        case Brulure: etat_str = "Brulure"; break;
-        case Gel: etat_str = "Gel"; break;
-        case Empoisonnement: etat_str = "Empoisonnement"; break;
-        case Paralysie: etat_str = "Paralysie"; break;
-        case Sommeil: etat_str = "Sommeil"; break;
-        case KO: etat_str = "KO"; break;
+        case Brulure: etat_str = "🔥"; break;
+        case Gel: etat_str = "❄️"; break;
+        case Empoisonnement: etat_str = "🧪"; break;
+        case Paralysie: etat_str = "⚡"; break;
+        case Sommeil: etat_str = "💤"; break;
+        case KO: etat_str = "☠️"; break;
         default: etat_str = "Inconnu"; break;
     }
 
