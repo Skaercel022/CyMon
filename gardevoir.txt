@@ -4,7 +4,7 @@ Gardevoir
 76
 90
 Psy
-Choc_mental
+Choc_Mental
 Repos
 Plenitude
 Psyko
