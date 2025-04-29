@@ -283,16 +283,6 @@ float degats(Pokemon* attaquant, Pokemon* defenseur, Comp atq){
 }
 void effet_spe(Pokemon* attaquant, Pokemon* defenseur, Comp atk) {
     int alea = rand() % 100;
-    float x;
-    if(attaquant->atkbase.comp==Choc_Mental){
-        x=143.0;
-    }
-    if(attaquant->atkbase.comp==Crocs_givre){
-        x=140.0;
-    }
-    if(attaquant->atkbase.comp==Eclair){
-        x=135.0;
-    }
     // Effets aléatoires basés sur une probabilité
     if (alea < 10) {
         switch (atk.comp) {
@@ -382,7 +372,7 @@ void effet_spe(Pokemon* attaquant, Pokemon* defenseur, Comp atk) {
             break;
 
         case Repos:
-            attaquant->pv_courant = x;
+            attaquant->pv_courant = attaquant->pv_max;
             printf("\n");
             aff_char(attaquant->nom_poke);
             printf(" se soigne");
@@ -448,33 +438,33 @@ void effet_spe(Pokemon* attaquant, Pokemon* defenseur, Comp atk) {
             break;
     }
 }
-Comp maj_damage(Pokemon* offense, Pokemon** adversaires, Pokemon* cible){
+Comp maj_damage(Pokemon* offense, Pokemon** adversaires, Pokemon** cible){
     Comp result;
     Comp* adr=&(offense->atkbase);
     float max=0.0;
-    cible=adversaires[0];
+    *cible=adversaires[0];
     for(int j=0; j<3; j++){
         if(degats(offense, adversaires[j], offense->atkbase)>max){
             result=offense->atkbase;
-            cible=adversaires[j];
+            *cible=adversaires[j];
             max=degats(offense, adversaires[j], offense->atkbase);
             adr=&(offense->atkbase);
         }
         if((degats(offense, adversaires[j], offense->spe1)>max) && offense->spe1.cooldown==0){
             result=offense->spe1;
-            cible=adversaires[j];
+            *cible=adversaires[j];
             max=degats(offense, adversaires[j], offense->spe1);
             adr=&(offense->spe1);
         }
         if((degats(offense, adversaires[j], offense->spe2)>max) && offense->spe2.cooldown==0){
             result=offense->spe2;
-            cible=adversaires[j];
+            *cible=adversaires[j];
             max=degats(offense, adversaires[j], offense->spe2);
             adr=&(offense->spe2);
         }
         if((degats(offense, adversaires[j], offense->spe3)>max) && offense->spe3.cooldown==0){
             result=offense->spe3;
-            cible=adversaires[j];
+            *cible=adversaires[j];
             max=degats(offense, adversaires[j], offense->spe3);
             adr=&(offense->spe3);
         }
@@ -544,27 +534,6 @@ void fin_e_a_b(Pokemon* offense, Pokemon* cible, Comp choix){
         printf("\nL'attaque a echoue ou a ete esquive");
     }
     effet_spe(offense, cible, choix);
-    if(choix.comp==Repos){
-        if(offense->atkbase.comp==Eclair){
-            offense->pv_courant=135.0;
-        }
-        if(offense->atkbase.comp==Choc_Mental){
-            offense->pv_courant=143.0;
-        }
-        if(offense->atkbase.comp==Crocs_givre){
-            offense->pv_courant=140.0;
-        }
-        printf("\n");
-        aff_char(offense->nom_poke);
-        printf(" se soigne");
-        offense->sleep=2;
-        offense->etat=Sommeil;
-        printf("\n");
-        aff_char(offense->nom_poke);
-        printf(" dort");
-    }
-    printf("\n");
-    aff_char(cible->nom_poke);
     if (offense->etat == Brulure) {
         cible->pv_courant -= x / 2;
     } 
@@ -618,7 +587,7 @@ void effect_atk_bot(Pokemon* offense, Pokemon** team, Pokemon** adversaires){
         }
     }
     if(cible==NULL){
-        choix=maj_damage(offense, adversaires, cible);
+        choix=maj_damage(offense, adversaires, &cible);
     }
     if(choix.comp==Abri){
         fin_e_a_b(offense, offense, choix);
@@ -771,25 +740,6 @@ void fin_e_a(Pokemon* offense, Pokemon* cible, Comp atk){
         printf("\nL'attaque a echoue ou a ete esquive");    
     }
     effet_spe(offense, cible, atk);
-    if(atk.comp==Repos){
-        if(offense->atkbase.comp==Eclair){
-            offense->pv_courant=135.0;
-        }
-        if(offense->atkbase.comp==Choc_Mental){
-            offense->pv_courant=143.0;
-        }
-        if(offense->atkbase.comp==Crocs_givre){
-            offense->pv_courant=140.0;
-        }
-        printf("\n");
-        aff_char(offense->nom_poke);
-        printf(" se soigne");
-        offense->sleep=2;
-        offense->etat=Sommeil;
-        printf("\n");
-        aff_char(offense->nom_poke);
-        printf(" dort");
-    }
     if(cible->protec==1){
         x=0;
         printf(" s'est protege");
@@ -915,7 +865,7 @@ int fight(Pokemon** player, Pokemon** bot, int mode){//rajouter un srand dans le
             return 0;
         }
         else{
-            printf("P2 a gagne!!!");
+            printf("\nP2 a gagne!!!");
             return -1;
         }
     }
@@ -956,7 +906,7 @@ int fight(Pokemon** player, Pokemon** bot, int mode){//rajouter un srand dans le
             return 0;
         }
         else{
-            printf("Hahaha t'as perdu t'es trop nul Bouhhh");
+            printf("\nHahaha t'as perdu t'es trop nul Bouhhh");
             return -1;
         }
     }
