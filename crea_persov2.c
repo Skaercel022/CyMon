@@ -186,7 +186,7 @@ void crea_comp(Comp* comp, Competence_spe comp_spe) {
   }
   if (comp_spe == Abattage) {
       comp->cooldownmax = 6;
-      comp->type = Plante;
+      comp->type = Dragon;
       comp->puissance = 120;
       comp->precision = 100;
   }
