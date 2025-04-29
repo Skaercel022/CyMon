@@ -17,7 +17,7 @@ float type_effect(Type atk, Type def){
         return 1.0;
     }
 }
-void effect_status(Pokemon* poke, int nbtour){
+void effect_status(Pokemon* poke, int* nbtour){
     if(poke->etat==Brulure){
         printf("\n");
         aff_char(poke->nom_poke);
@@ -28,12 +28,16 @@ void effect_status(Pokemon* poke, int nbtour){
         printf("\n");
         aff_char(poke->nom_poke);
         printf(" est empoisonne\n il prend des degats");
-        poke->pv_courant=poke->pv_courant-((nbtour*(poke->pv_max))/16);
+        poke->pv_courant=poke->pv_courant-(((*nbtour)*(poke->pv_max))/16);
     }
-    nbtour++;
-    if(poke->etat==Sommeil){
-        nbtour--;
-        nbtour--;
+    (*nbtour)++;
+    if(poke->etat == Sommeil){
+        poke->sleep--;
+        poke->sleep--;
+        if(poke->sleep <= 0){
+            poke->etat = Neutre;
+            printf("\n%s se réveille!", poke->nom_poke);
+        }
     }
 }
 void aff_effect_atk(Competence_spe atk){ 
@@ -98,7 +102,7 @@ void aff_effect_atk(Competence_spe atk){
         break;
         case Draco_griffe:    printf("||Dragon: 80 puissance"); 
         break;
-        case Abattage:        printf("||Plante: 120 puissance"); 
+        case Abattage:        printf("||Dragon: 120 puissance"); 
         break;
         case Danse_draco:     printf("||Dragon: augmente attaque et vitesse"); 
         break;
@@ -281,7 +285,7 @@ float degats(Pokemon* attaquant, Pokemon* defenseur, Comp atq){
         }
     }
 }
-void effet_spe(Pokemon* attaquant, Pokemon* defenseur, Comp atk) {
+void effet_spe(Pokemon** attaquant, Pokemon* defenseur, Comp atk) {
     int alea = rand() % 100;
     // Effets aléatoires basés sur une probabilité
     if (alea < 10) {
@@ -335,52 +339,51 @@ void effet_spe(Pokemon* attaquant, Pokemon* defenseur, Comp atk) {
     // Effets directs (sans probabilité)
     switch (atk.comp) {
         case Nitrocharge:
-            attaquant->vitesse = (7 * (attaquant->vitesse)) / 6;
+            (*attaquant)->vitesse = (7 * ((*attaquant)->vitesse)) / 6;
             printf("\nLa vitesse de ");
-            aff_char(attaquant->nom_poke);
+            aff_char((*attaquant)->nom_poke);
             printf(" augmente");
             break;
 
         case Danse_draco:
-            attaquant->vitesse = (7 * (attaquant->vitesse)) / 6;
+            (*attaquant)->vitesse = (7 * ((*attaquant)->vitesse)) / 6;
             printf("\nLa vitesse de ");
-            aff_char(attaquant->nom_poke);
+            aff_char((*attaquant)->nom_poke);
             printf(" augmente");
-            attaquant->attaque = (7 * (attaquant->attaque)) / 6;
+            (*attaquant)->attaque = (7 * ((*attaquant)->attaque)) / 6;
             printf("\nL'attaque de ");
-            aff_char(attaquant->nom_poke);
+            aff_char((*attaquant)->nom_poke);
             printf(" augmente");
             break;
 
         case Plenitude:
         case Gonflette:
-            attaquant->defense = (7 * (attaquant->defense)) / 6;
+            (*attaquant)->defense = (7 * ((*attaquant)->defense)) / 6;
             printf("\nLa defense de ");
-            aff_char(attaquant->nom_poke);
+            aff_char((*attaquant)->nom_poke);
             printf(" augmente");
-            attaquant->attaque = (7 * (attaquant->attaque)) / 6;
+            (*attaquant)->attaque = (7 * ((*attaquant)->attaque)) / 6;
             printf("\nL'attaque de ");
-            aff_char(attaquant->nom_poke);
+            aff_char((*attaquant)->nom_poke);
             printf(" augmente");
             break;
 
         case Close_Combat:
-            attaquant->defense = (2 * (attaquant->defense)) / 3;
+            (*attaquant)->defense = (2 * ((*attaquant)->defense)) / 3;
             printf("\nLa defense de ");
-            aff_char(attaquant->nom_poke);
+            aff_char((*attaquant)->nom_poke);
             printf(" diminue beaucoup");
             break;
 
-        case Repos:
-            attaquant->pv_courant = attaquant->pv_max;
-            printf("\n");
-            aff_char(attaquant->nom_poke);
-            printf(" se soigne");
-            attaquant->sleep = 2;
-            attaquant->etat = Sommeil;
-            printf("\n");
-            aff_char(attaquant->nom_poke);
-            printf(" dort");
+            case Repos:
+            if ((*attaquant)->etat != Sommeil) {  // Évite de réappliquer Repos si déjà endormi
+                (*attaquant)->pv_courant = (*attaquant)->pv_max;
+                (*attaquant)->sleep = 3;
+                (*attaquant)->etat = Sommeil;
+                printf("\n");
+                aff_char((*attaquant)->nom_poke);
+                printf(" se soigne et s'endort!");
+            }
             break;
 
         case Cage_eclair:
@@ -391,14 +394,14 @@ void effet_spe(Pokemon* attaquant, Pokemon* defenseur, Comp atk) {
             break;
 
         case Giga_sangsue:
-            if((attaquant->pv_courant+(degats(attaquant, defenseur, atk)) / 2)>attaquant->pv_max){
-                attaquant->pv_courant=attaquant->pv_max;
+            if(((*attaquant)->pv_courant+(degats((*attaquant), defenseur, atk)) / 2)>(*attaquant)->pv_max){
+                (*attaquant)->pv_courant=(*attaquant)->pv_max;
             }
             else{
-                attaquant->pv_courant += (degats(attaquant, defenseur, atk)) / 2;
+                (*attaquant)->pv_courant += (degats((*attaquant), defenseur, atk)) / 2;
             }
             printf("\n");
-            aff_char(attaquant->nom_poke);
+            aff_char((*attaquant)->nom_poke);
             printf(" draine des pv");
             break;
 
@@ -412,16 +415,16 @@ void effet_spe(Pokemon* attaquant, Pokemon* defenseur, Comp atk) {
             break;
 
         case Danse_lame:
-            attaquant->attaque = (4 * (attaquant->attaque)) / 3;
+            (*attaquant)->attaque = (4 * ((*attaquant)->attaque)) / 3;
             printf("\nL'attaque de ");
-            aff_char(attaquant->nom_poke);
+            aff_char((*attaquant)->nom_poke);
             printf(" augmente beaucoup");
             break;
 
         case Mur_de_fer:
-            attaquant->defense = (4 * (attaquant->defense)) / 3;
+            (*attaquant)->defense = (4 * ((*attaquant)->defense)) / 3;
             printf("\nLa defense de ");
-            aff_char(attaquant->nom_poke);
+            aff_char((*attaquant)->nom_poke);
             printf(" augmente beaucoup");
             break;
 
@@ -433,7 +436,6 @@ void effet_spe(Pokemon* attaquant, Pokemon* defenseur, Comp atk) {
                 printf(" est brule");
             }
             break;
-
         default:
             break;
     }
@@ -593,14 +595,11 @@ void fin_e_a_b(Pokemon* offense, Pokemon* cible, Comp choix){
         printf(" s'est protege");
         cible->protec=0;
     }
-    if(offense->sleep>0){
+    effet_spe(&offense, cible, choix);
+    if(offense->sleep>0 && offense->etat==Sommeil && offense->etat!=Brulure && offense->etat!=Empoisonnement){
         printf("\n");
         aff_char(offense->nom_poke);
         printf(" dort il n'a pas pu attaque");
-        offense->sleep=offense->sleep-1;
-        if(offense->sleep==0){
-            offense->etat=Neutre;
-        }
         x=0;
     }
     if(aleagel>20 && offense->etat==Gel){
@@ -624,7 +623,17 @@ void fin_e_a_b(Pokemon* offense, Pokemon* cible, Comp choix){
     else if(x==0 && choix.comp!=Abri && choix.comp!=Feu_Follet && choix.comp!=Danse_lame && choix.comp!=Feu_Follet && choix.comp!=Repos && choix.comp!=Plenitude && choix.comp!=Douche_froide && choix.comp!=Gonflette && choix.comp!=Mur_de_fer && choix.comp!=Cage_eclair && choix.comp!=Danse_draco){
         printf("\nL'attaque a echoue ou a ete esquive");
     }
-    effet_spe(offense, cible, choix);
+    if(choix.comp==Repos){
+        offense->pv_courant = offense->pv_max;
+        printf("\n");
+        aff_char(offense->nom_poke);
+        printf(" se soigne");
+        offense->sleep = 3;
+        offense->etat = Sommeil;
+        printf("\n");
+        aff_char(offense->nom_poke);
+        printf(" dort");
+    }
     if (offense->etat == Brulure) {
         cible->pv_courant -= x / 2;
     } 
@@ -634,6 +643,8 @@ void fin_e_a_b(Pokemon* offense, Pokemon* cible, Comp choix){
     if(cible->pv_courant<0){
         cible->pv_courant=0;
         cible->vitesse=0;
+        cible->speedbar=0;
+        cible->etat=KO;
         printf("\n");
         aff_char(cible->nom_poke);
         printf(" est KO");
@@ -689,7 +700,7 @@ void effect_atk_bot(Pokemon* offense, Pokemon** team, Pokemon** adversaires){
     if(cible==NULL){
         choix=maj_damage(offense, adversaires, &cible);
     }
-    if(choix.comp==Abri){
+    if(choix.comp==Abri || choix.comp==Repos || choix.comp==Plenitude || choix.comp==Gonflette || choix.comp==Mur_de_fer){
         fin_e_a_b(offense, offense, choix);
     }
     else if(choix.comp==Aboiement || choix.comp==Seisme || choix.comp==Abattage || choix.comp==Surf){
@@ -718,7 +729,6 @@ void effect_atk_bot(Pokemon* offense, Pokemon** team, Pokemon** adversaires){
     else{
         fin_e_a_b(offense, cible, choix);
     }
-    effect_status(offense, offense->sleep);
 }
 Pokemon* choix_target(Pokemon** team, Pokemon** opp){
     char name[100];
@@ -808,15 +818,22 @@ void fin_e_a(Pokemon* offense, Pokemon* cible, Comp atk){
         printf(" s'est protege");
         cible->protec=0;
     }
-    if(offense->sleep>0){
+    if(offense->sleep>0 && offense->etat!=Brulure && offense->etat!=Empoisonnement && offense->etat!=Gel && offense->etat!=KO && offense->etat==Sommeil){
         printf("\n");
         aff_char(offense->nom_poke);
         printf(" dort il n'a pas pu attaque");
-        offense->sleep=offense->sleep-1;
-        if(offense->sleep==0){
-            offense->etat=Neutre;
-        }
         x=0;
+    }
+    if(atk.comp==Repos){
+        offense->pv_courant = offense->pv_max;
+        printf("\n");
+        aff_char(offense->nom_poke);
+        printf(" se soigne");
+        offense->sleep = 3;
+        offense->etat = Sommeil;
+        printf("\n");
+        aff_char(offense->nom_poke);
+        printf(" dort");
     }
     if(aleagel>20 && offense->etat==Gel){
         printf("\n");
@@ -839,7 +856,7 @@ void fin_e_a(Pokemon* offense, Pokemon* cible, Comp atk){
     else if(x==0 && atk.comp!=Abri && atk.comp!=Feu_Follet && atk.comp!=Danse_lame && atk.comp!=Feu_Follet && atk.comp!=Repos && atk.comp!=Plenitude && atk.comp!=Douche_froide && atk.comp!=Gonflette && atk.comp!=Mur_de_fer && atk.comp!=Cage_eclair && atk.comp!=Danse_draco){
         printf("\nL'attaque a echoue ou a ete esquive");    
     }
-    effet_spe(offense, cible, atk);
+    effet_spe(&offense, cible, atk);
     if(cible->protec==1){
         x=0;
         printf(" s'est protege");
@@ -854,6 +871,8 @@ void fin_e_a(Pokemon* offense, Pokemon* cible, Comp atk){
     if(cible->pv_courant<0){
         cible->pv_courant=0;
         cible->vitesse=0;
+        cible->speedbar=0;
+        cible->etat=KO;
         printf("\n");
         aff_char(cible->nom_poke);
         printf(" est KO");
@@ -881,6 +900,9 @@ void effect_atk(Pokemon* offense, Pokemon** team, Pokemon** adversaires, Comp at
                     fin_e_a(offense, adversaires[o], atk);
                 }
             }            
+        }
+        else{
+            fin_e_a(offense, offense, atk);
         }
     }
     else{
@@ -911,6 +933,27 @@ void cooldown1poke(Pokemon* poke){
         (*poke).spe3.cooldown=(*poke).spe3.cooldown-1;
     }
 }
+void aff_states(Pokemon* poke){
+    if(poke->etat==Empoisonnement){
+        printf("🧪 ");
+    }
+    if(poke->etat==Paralysie){
+        printf("⚡");
+    }
+    if(poke->etat==Brulure){
+        printf("🔥 ");
+    }
+    if(poke->etat==Gel){
+        printf("❄️ ");
+    }
+    if(poke->etat==Sommeil){
+        printf("💤 ");
+    }
+    if(poke->etat==KO){
+        printf("☠️ ");
+    }
+
+}
 int fight(Pokemon** player, Pokemon** bot, int mode){//rajouter un srand dans le main
     for(int h=0; h<3; h++){
         player[h]->protec=0;
@@ -921,12 +964,12 @@ int fight(Pokemon** player, Pokemon** bot, int mode){//rajouter un srand dans le
             speedbarplus(player[0], player[1], player[2], bot[0], bot[1], bot[2]);
             if(plus1000(*(player[0]), *(player[1]), *(player[2]), *(bot[0]), *(bot[1]), *(bot[2]))==1){
                 sleep(2);
-                system("clear");
                 for(int f=0; f<15; f++){
                     printf("\n");
                 }
                 printf("\n\n");
                 for(int t=0; t<3; t++){//a enlever uniquement pour les tests
+                    aff_states(bot[t]);
                     aff_char(bot[t]->nom_poke);
                     printf(" : %f                      ", bot[t]->pv_courant);
                 }
@@ -934,17 +977,18 @@ int fight(Pokemon** player, Pokemon** bot, int mode){//rajouter un srand dans le
                     printf("\n");
                 }
                 for(int t=0; t<3; t++){//a enlever uniquement pour les tests
+                    aff_states(player[t]);
                     aff_char(player[t]->nom_poke);
                     printf(" : %f                      ", player[t]->pv_courant);
                 }
                 if(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])==player[0] || maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])==player[1] || maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])==player[2]){
                     effect_atk(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), player, bot, choix_atk(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])));
-                    effect_status(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])->sleep);
+                    effect_status(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), &(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])->sleep));
                     cooldown1poke(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]));
                 }
                 else{
                     effect_atk(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), bot, player, choix_atk(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])));
-                    effect_status(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])->sleep);
+                    effect_status(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), &(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])->sleep));
                     cooldown1poke(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]));
                 }
                 (maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])->speedbar)=0;
@@ -991,11 +1035,12 @@ int fight(Pokemon** player, Pokemon** bot, int mode){//rajouter un srand dans le
                 printf("\n\n");
                 if(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])==player[0] || maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])==player[1] || maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])==player[2]){
                     effect_atk(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), player, bot, choix_atk(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])));
-                    effect_status(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])->sleep);
+                    effect_status(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), &(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])->sleep));
                     cooldown1poke(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]));
                 }
                 else{
                     effect_atk_bot(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), bot, player);
+                    effect_status(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]), &(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])->sleep));
                     cooldown1poke(maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2]));
                 }
                 (maj6(player[0], player[1], player[2], bot[0], bot[1], bot[2])->speedbar)=0;
