@@ -1,5 +1,6 @@
 #ifndef COMBAT_H
 #define COMBAT_H
+void vide_buffer();
 float type_effect(Type atk, Type def);
 void effect_status(Pokemon* poke, int* nbtour);
 void aff_effect_atk(Competence_spe atk);
