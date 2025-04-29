@@ -472,6 +472,97 @@ Comp maj_damage(Pokemon* offense, Pokemon** adversaires, Pokemon** cible){
     (*adr).cooldown=(*adr).cooldownmax;   
     return result;
 }
+Comp choix_bot_spe(Pokemon* offense, Pokemon** adversaires, Pokemon** cible, int nb){
+    Comp result=offense->atkbase;
+    Comp* adr=&(offense->atkbase);
+    if(offense->pv_courant > (offense->pv_max*8)/10){
+        if(nb==1){
+            if(offense->spe1.comp==Feu_Follet || offense->spe1.comp==Plenitude || offense->spe1.comp==Douche_froide || offense->spe1.comp==Gonflette || offense->spe1.comp==Mur_de_fer || offense->spe1.comp==Cage_eclair || offense->spe1.comp==Danse_draco){
+                if(offense->spe1.cooldown==0){
+                    result=offense->spe1;
+                    for(int j=0;j<3;j++){
+                        if(adversaires[j]->pv_courant>0){
+                            *cible=adversaires[j];
+                        }
+                    }           
+                    adr=&(offense->spe1);
+                }                
+            }
+        }
+        else if(nb==2){
+            if(offense->spe2.comp == Feu_Follet || offense->spe2.comp == Plenitude || offense->spe2.comp == Douche_froide || offense->spe2.comp == Gonflette || offense->spe2.comp == Mur_de_fer || offense->spe2.comp == Cage_eclair || offense->spe2.comp == Danse_draco){
+                if(offense->spe2.cooldown==0){
+                    result = offense->spe2;
+                    for(int j=0;j<3;j++){
+                        if(adversaires[j]->pv_courant>0){
+                            *cible=adversaires[j];
+                        }
+                    } 
+                    adr = &(offense->spe2);
+                }
+            }            
+        }
+        else if(nb==3){
+            if(offense->spe3.comp == Feu_Follet || offense->spe3.comp == Plenitude || offense->spe3.comp == Douche_froide || offense->spe3.comp == Gonflette || offense->spe3.comp == Mur_de_fer || offense->spe3.comp == Cage_eclair || offense->spe3.comp == Danse_draco){
+                if(offense->spe3.cooldown==0){
+                    result = offense->spe3;
+                    for(int j=0;j<3;j++){
+                        if(adversaires[j]->pv_courant>0){
+                            *cible=adversaires[j];
+                        }
+                    } 
+                    adr = &(offense->spe3);
+                }                
+            }            
+        }
+    }
+    if(offense->pv_courant < (offense->pv_max*3)/10){
+        if(nb==1){
+            if(offense->spe1.comp==Abri || offense->spe1.comp==Repos){
+                if(offense->spe1.cooldown==0){
+                    result=offense->spe1;
+                    for(int j=0;j<3;j++){
+                        if(adversaires[j]->pv_courant>0){
+                            *cible=adversaires[j];
+                        }
+                    }           
+                    adr=&(offense->spe1);
+                }     
+            }
+        }
+        else if(nb==2){
+            if(offense->spe2.comp == Abri || offense->spe2.comp == Repos){
+                if(offense->spe2.cooldown==0){
+                    result = offense->spe2;
+                    for(int j=0;j<3;j++){
+                        if(adversaires[j]->pv_courant>0){
+                            *cible=adversaires[j];
+                        }
+                    } 
+                    adr = &(offense->spe2);
+                }
+            }           
+        }
+        else if(nb==3){
+            if(offense->spe3.comp == Abri || offense->spe3.comp == Repos){
+                result = offense->spe3;
+                if(offense->spe3.cooldown==0){
+                    result = offense->spe3;
+                    for(int j=0;j<3;j++){
+                        if(adversaires[j]->pv_courant>0){
+                            *cible=adversaires[j];
+                        }
+                    } 
+                    adr = &(offense->spe3);
+                }
+            }            
+        }
+    }
+    if(adr!=(&(offense->atkbase))){
+        (*adr).cooldown=(*adr).cooldownmax;
+    }
+    return result;
+}
 void fin_e_a_b(Pokemon* offense, Pokemon* cible, Comp choix){
     int x=0;
     int aleapara=rand()%100+1;
@@ -585,6 +676,15 @@ void effect_atk_bot(Pokemon* offense, Pokemon** team, Pokemon** adversaires){
                 offense->spe3.cooldown=offense->spe3.cooldownmax;
             }
         }
+    }
+    if(cible==NULL){
+        choix=choix_bot_spe(offense, adversaires, &cible, 1);
+    }
+    if(cible==NULL){
+        choix=choix_bot_spe(offense, adversaires, &cible, 2);
+    }
+    if(cible==NULL){
+        choix=choix_bot_spe(offense, adversaires, &cible, 3);
     }
     if(cible==NULL){
         choix=maj_damage(offense, adversaires, &cible);
