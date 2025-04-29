@@ -1,5 +1,8 @@
 #include "Biblio_lin.h"
 #include "combat.h"
+void vide_buffer(){
+    while(getchar()!='\n');
+}
 float type_effect(Type atk, Type def){
     if(((atk==Normal) && (def==Spectre)) || ((atk==Electrik) && (def==Sol)) || ((atk==Combat) && (def==Spectre)) || ((atk==Poison) && (def==Acier)) || ((atk==Sol) && (def==Vol)) || ((atk==Psy) && (def==Tenebres)) || ((atk==Spectre) && (def==Normal)) || ((atk==Dragon) && (def==Fee))){
         return 0.0;
@@ -734,6 +737,7 @@ Pokemon* choix_target(Pokemon** team, Pokemon** opp){
     char name[100];
     int occurences = 0;
     int rep = 0;
+    int verif=0;
     Pokemon* cible = NULL;
     do {
         occurences = 0;
@@ -767,8 +771,9 @@ Pokemon* choix_target(Pokemon** team, Pokemon** opp){
             do {
                 printf("\nPlusieurs pokémons ont ce nom. Donnez sa position (1 à 6) :\n");
                 printf("1-3 : adversaires, 4-6 : alliés\n");
-                scanf("%d", &rep);
-            } while (rep < 1 || rep > 6);
+                verif=scanf("%d", &rep);
+                vide_buffer();
+            } while (rep < 1 || rep > 6 || verif!=1);
             if (!cible) {
                 printf("Erreur : cible invalide (NULL)\n");
                 exit(1);
