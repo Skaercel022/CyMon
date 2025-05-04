@@ -46,7 +46,7 @@ char* get_comp_name(Competence_spe comp){
         case Douche_froide:     return "Douche_froide";
         case Feuillage:         return "Feuillage";
         case Giga_sangsue:      return "Giga_sangsue";
-        case Vive_attaque:      return "Vive_attaque";
+        case Tranche:      return "Tranche";
         case Balayage:          return "Balayage";
         case Gonflette:         return "Gonflette";
         case Poison_croix:      return "Poison_croix";
@@ -82,7 +82,7 @@ Competence_spe get_comp_from_name(char* name) {
     if (compare_chaine(name, "Douche_froide") == 0)    return Douche_froide;
     if (compare_chaine(name, "Feuillage") == 0)        return Feuillage;
     if (compare_chaine(name, "Giga_sangsue") == 0)     return Giga_sangsue;
-    if (compare_chaine(name, "Vive_attaque") == 0)     return Vive_attaque;
+    if (compare_chaine(name, "Tranche") == 0)     return Tranche;
     if (compare_chaine(name, "Balayage") == 0)         return Balayage;
     if (compare_chaine(name, "Gonflette") == 0)        return Gonflette;
     if (compare_chaine(name, "Poison_croix") == 0)     return Poison_croix;
