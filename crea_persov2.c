@@ -90,7 +90,7 @@ void crea_comp(Comp* comp, Competence_spe comp_spe) {
   }
   if (comp_spe == Douche_froide) {
       comp->cooldownmax = 5;
-      comp->type = Glace;
+      comp->type = Eau;
       comp->puissance = 50;
       comp->precision = 90;
   }
