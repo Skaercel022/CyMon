@@ -73,7 +73,7 @@ void aff_effect_atk(Competence_spe atk){
         break;
         case Laser_glace:     printf("||Glace: 90 puissance (peut geler)"); 
         break;
-        case Douche_froide:   printf("||Glace: 50 puissance (réduit attaque adverse)"); 
+        case Douche_froide:   printf("||Eau: 50 puissance (réduit attaque adverse)"); 
         break;
         case Feuillage:       printf("||Plante: 40 puissance"); 
         break;
