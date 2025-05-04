@@ -1,5 +1,6 @@
 #include "Biblio_lin.h"
 #include "combat.h"
+#include "affichagevs.h"
 void vide_buffer(){
     while(getchar()!='\n');
 }
@@ -79,7 +80,7 @@ void aff_effect_atk(Competence_spe atk){
         break;
         case Giga_sangsue:    printf("||Plante: 75 puissance (vole des PV)"); 
         break;
-        case Vive_attaque:    printf("||Normal: 40 puissance (prioritaire)"); 
+        case Tranche:    printf("||Normal: 70 puissance"); 
         break;
         case Balayage:        printf("||Combat: 65 puissance (plus efficace contre lourds)"); 
         break;
@@ -134,7 +135,7 @@ void aff_atk(Competence_spe atk){
         case Douche_froide:   printf("Douche Froide"); break;
         case Feuillage:       printf("Feuillage"); break;
         case Giga_sangsue:    printf("Giga-Sangsue"); break;
-        case Vive_attaque:    printf("Vive-Attaque"); break;
+        case Tranche:    printf("Tranche"); break;
         case Balayage:        printf("Balayage"); break;
         case Gonflette:       printf("Gonflette"); break;
         case Poison_croix:    printf("Poison Croix"); break;
