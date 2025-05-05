@@ -110,6 +110,10 @@ void aff_effect_atk(Competence_spe atk){
         break;
         case Danse_draco:     printf("||Dragon: augmente attaque et vitesse"); 
         break;
+        case Tonnerre:         printf("||Électrik: 90 puissance");
+        break;
+        case Electacle:       printf("||Électrik: 120 puissance");
+        break;
         default:
             printf("||Inconnu");
             break;
@@ -150,6 +154,8 @@ void aff_atk(Competence_spe atk){
         case Draco_griffe:    printf("Draco-Griffe"); break;
         case Abattage:        printf("Abattage"); break;
         case Danse_draco:     printf("Danse Draco"); break;
+        case Tonnerre:         printf("Tonnerre"); break;
+        case Electacle:       printf("Electacle"); break;
         default:
             printf("Inconnu");
             break;
@@ -302,6 +308,8 @@ void effet_spe(Pokemon** attaquant, Pokemon* defenseur, Comp atk) {
                 break;
 
             case Eclair:
+            case Tonnerre:
+            case Electacle:
                 defenseur->etat = Paralysie;
                 printf("\n");
                 aff_char(defenseur->nom_poke);
@@ -342,6 +350,9 @@ void effet_spe(Pokemon** attaquant, Pokemon* defenseur, Comp atk) {
     }
     // Effets directs (sans probabilité)
     switch (atk.comp) {
+        case Electacle:
+                attaquant[0]->pv_courant -= (attaquant[0]->pv_max)/3;
+                break;
         case Nitrocharge:
             (*attaquant)->vitesse = (7 * ((*attaquant)->vitesse)) / 6;
             printf("\nLa vitesse de ");
