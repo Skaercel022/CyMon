@@ -6,5 +6,5 @@ Jungko
 Plante
 Feuillage
 Giga_sangsue
-Tranche
+Poison_croix
 Abri
