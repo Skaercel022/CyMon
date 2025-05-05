@@ -6,7 +6,7 @@ int main(){
     srand(time(NULL));
     int num=1;
     int mode=0;
-    int verf=0;
+    int verif=0;
     int* adr=&num;
     Pokemon** p1;
     Pokemon** p2;
@@ -15,7 +15,7 @@ int main(){
         printf("\n\nChoisissez votre mode de jeu : \n 1- Mode Solo \n 2- Mode Multi joueur\nRentrer votre choix ici : ");
         verif=scanf("%d", &mode);
         vide_buffer();
-    }while-((mode!=1 && mode!=2) || verif!=1);
+    }while((mode!=1 && mode!=2) || verif!=1);
     if(mode==2){
         printf("Vous avez choisi le mode multijoueur");
         printf("\n\n                             Veuillez creer une equipe pour P1");
