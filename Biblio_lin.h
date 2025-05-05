@@ -15,7 +15,7 @@ typedef enum {
     Aboiement, Choc_Mental, Repos, Plenitude, Psyko, Crocs_givre, Laser_glace,
     Douche_froide, Feuillage, Giga_sangsue, Tranche, Balayage, Gonflette,
     Poison_croix, Osmerang, Queue_de_fer, Seisme, Mur_de_fer, Eclair, Cage_eclair,
-    Pistolet_a_O, Surf, Draco_griffe, Abattage, Danse_draco
+    Pistolet_a_O, Surf, Draco_griffe, Abattage, Danse_draco, Tonnerre, Electacle
 } Competence_spe;
 
 typedef enum {
