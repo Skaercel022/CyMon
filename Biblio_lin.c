@@ -61,6 +61,8 @@ char* get_comp_name(Competence_spe comp){
         case Draco_griffe:      return "Draco_griffe";
         case Abattage:          return "Abattage";
         case Danse_draco:       return "Danse_draco";
+        case Tonnerre:           return "Tonnerre";
+        case Electacle:         return "Electacle";
         default:                return "Inconnu";
     }
 }
@@ -97,6 +99,8 @@ Competence_spe get_comp_from_name(char* name) {
     if (compare_chaine(name, "Draco_griffe") == 0)     return Draco_griffe;
     if (compare_chaine(name, "Abattage") == 0)         return Abattage;
     if (compare_chaine(name, "Danse_draco") == 0)      return Danse_draco;
+    if (compare_chaine(name, "Tonnerre") == 0)          return Tonnerre;
+    if (compare_chaine(name, "Electacle") == 0)        return Electacle;
     return -1; // Flop
 }
 
