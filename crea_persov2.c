@@ -80,7 +80,7 @@ void crea_comp(Comp* comp, Competence_spe comp_spe) {
   if (comp_spe == Crocs_givre) {
       comp->cooldownmax = 0;
       comp->type = Glace;
-      comp->puissance = 65;
+      comp->puissance = 50;
       comp->precision = 95;
   }
   if (comp_spe == Laser_glace) {
