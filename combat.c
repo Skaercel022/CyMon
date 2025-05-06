@@ -1,9 +1,13 @@
 #include "Biblio_lin.h"
 #include "combat.h"
 #include "affichagevs.h"
+
+//vide buffer
 void vide_buffer(){
     while(getchar()!='\n');
 }
+
+//multiplicateur des attaques en fonction des types
 float type_effect(Type atk, Type def){
     if(((atk==Normal) && (def==Spectre)) || ((atk==Electrik) && (def==Sol)) || ((atk==Combat) && (def==Spectre)) || ((atk==Poison) && (def==Acier)) || ((atk==Sol) && (def==Vol)) || ((atk==Psy) && (def==Tenebres)) || ((atk==Spectre) && (def==Normal)) || ((atk==Dragon) && (def==Fee))){
         return 0.0;
@@ -21,6 +25,8 @@ float type_effect(Type atk, Type def){
         return 1.0;
     }
 }
+
+//controle des effets de status
 void effect_status(Pokemon* poke, int* nbtour){
     if(poke->etat==Brulure){
         printf("\n");
@@ -44,6 +50,8 @@ void effect_status(Pokemon* poke, int* nbtour){
         }
     }
 }
+
+//affichage des effets des attaques
 void aff_effect_atk(Competence_spe atk){ 
     switch (atk) {
         case Nitrocharge:     printf("||Feu: 50 puissance (amplifie la vitesse)"); 
@@ -120,6 +128,7 @@ void aff_effect_atk(Competence_spe atk){
     }
 }
 
+//affichage de l'attaque utilisée
 void aff_atk(Competence_spe atk){
     switch (atk) {
         case Nitrocharge:     printf("Nitrocharge"); break;
@@ -162,6 +171,7 @@ void aff_atk(Competence_spe atk){
     }
 }
 
+//controle de la speedbar
 void speedbarplus(Pokemon* un, Pokemon* deux, Pokemon* trois, Pokemon* quatre, Pokemon* cinq, Pokemon* six){
     if(un->etat==Paralysie){
         (*un).speedbar=(*un).speedbar+((*un).vitesse)/2;
@@ -207,7 +217,8 @@ int plus1000(Pokemon un, Pokemon deux, Pokemon trois, Pokemon quatre, Pokemon ci
     return 0;
 }
 
-Comp choix_atk(Pokemon* bu){//à testé
+//choix des attaques
+Comp choix_atk(Pokemon* bu){
     char* name=malloc(100*sizeof(char));
     printf("\n\n%s", (*bu).nom_poke);
     do{
@@ -252,6 +263,8 @@ Comp choix_atk(Pokemon* bu){//à testé
         }
     }while(1);
 }
+
+//controle des esquives
 int attaque_esquivee(Comp atk, Pokemon* attaque, Pokemon* defend){
     int alea=rand()%100+1;
     if(alea> (atk.precision*(attaque->précision/defend->agilite))){
@@ -263,6 +276,8 @@ int attaque_esquivee(Comp atk, Pokemon* attaque, Pokemon* defend){
         return 1;
     }
 }
+
+
 float degats(Pokemon* attaquant, Pokemon* defenseur, Comp atq){
     int aleacm = rand() % 15 + 85;
     int aleacrit = rand() % 100 + 1;
