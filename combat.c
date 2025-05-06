@@ -997,8 +997,8 @@ int fight(Pokemon** player, Pokemon** bot, int mode){//rajouter un srand dans le
     if(mode==2){
         while (((*(player[0])).pv_courant>0 || (*(player[1])).pv_courant>0 || (*(player[2])).pv_courant>0) && ((*(bot[0])).pv_courant>0 || (*(bot[1])).pv_courant>0 || (*(bot[2])).pv_courant>0)){
             speedbarplus(player[0], player[1], player[2], bot[0], bot[1], bot[2]);
+            sleep(500);
             if(plus1000(*(player[0]), *(player[1]), *(player[2]), *(bot[0]), *(bot[1]), *(bot[2]))==1){
-                sleep(2);
                 for(int f=0; f<15; f++){
                     printf("\n");
                 }
