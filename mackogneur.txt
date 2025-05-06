@@ -5,6 +5,6 @@ Mackogneur
 67
 Combat
 Balayage
-Close_combat
+Close_Combat
 Gonflette
 Poison_croix
