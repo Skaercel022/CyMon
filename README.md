@@ -5,4 +5,4 @@ Il faut savoir que le code fonctionne en entrée clavier c'est-à-dire que si au
 
 Pour choisir une cible écrivez son nom, puis appuyer sur entrer.
 
-Pour choisir un pokemon écrivez son nom.
+Pour choisir un pokemon CLIQUEZ n'écrivez pas son nom
