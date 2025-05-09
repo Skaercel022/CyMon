@@ -29,4 +29,5 @@ int main(){
         p2=create_team_ordi(adr);
     }
     fight(p1, p2, mode);
+    return 0;
 }
