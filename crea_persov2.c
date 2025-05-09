@@ -1,7 +1,7 @@
 #include "Biblio_lin.h"
 #include "affichagevs.h"
 #include "creapers.h"
-void crea_comp(Comp* comp, Competence_spe comp_spe) {
+void crea_comp(Comp* comp, Competence_spe comp_spe){
   comp->comp = comp_spe;
   comp->cooldown = 0;
 
@@ -234,21 +234,27 @@ void create_part2_poke(FILE* file, Pokemon* poke, int* nb){
 Pokemon* create_part1_poke_joueur(int* numero){
   Pokemon* p = malloc(sizeof(Pokemon));
   char* nom=malloc(30*sizeof(char));
-  char* name=malloc(30*sizeof(char));
   FILE* fichier;
+  int x=0;
+  int y=0;
+  SDL_Window* window2 = NULL;
+  SDL_Renderer* renderer2 = NULL;
+  SDL_Surface* surface2 = NULL;
+  SDL_Surface* icon2 = NULL;
+  SDL_Texture* texture2_2 = NULL;
   if (!p) {
     printf("Erreur d'allocation mémoire\n");
     exit(1);
   }
+  aff_fenetre(3, window2, renderer2, surface2, icon2, texture2_2);
   do{
-    printf("\nVoici tous les pokemon disponibles : \n-Arcanin\n-Pikachu\n-Tortank\n-Gardevoir\n-Absol\n-Mackogneur\n-Givrali\n-Jungko\n-Ossatueur\n-Tranchodon\n");
-    printf("\nRentrez le nom du pokemon choisi avec une majuscule au debut : ");
-    scanf(" %s", nom);
-  }while(compare_chaine("Arcanin", nom)!=0 && compare_chaine("Pikachu", nom)!=0 && compare_chaine("Tortank", nom)!=0 && compare_chaine("Gardevoir", nom)!=0 && compare_chaine("Absol", nom)!=0 && compare_chaine("Mackogneur", nom)!=0 && compare_chaine("Givrali", nom)!=0 && compare_chaine("Jungko", nom)!=0 && compare_chaine("Ossatueur", nom)!=0 && compare_chaine("Tranchodon", nom)!=0 );//g fais des modifs
+    nom=get_name_from_mouse(1, &x, &y, *p, NULL, NULL);
+  }while(compare_chaine("Arcanin", nom)!=0 && compare_chaine("Pikachu", nom)!=0 && compare_chaine("Tortank", nom)!=0 && compare_chaine("Gardevoir", nom)!=0 && compare_chaine("Absol", nom)!=0 && compare_chaine("Mackogneur", nom)!=0 && compare_chaine("Givrali", nom)!=0 && compare_chaine("Jungko", nom)!=0 && compare_chaine("Ossatueur", nom)!=0 && compare_chaine("Tranchodon", nom)!=0 );
+  printf("probleme pas la\n");
   p->numero = *numero;
+  strcpy(p->nom_poke,nom);
   (*numero)++;
-  printf("\nVoulez vous lui donnez un surnom (si c'est le cas ecrivez le sinon mettez son nom):");
-  scanf("%30s", name);
+  aff_fenetre(4, window2, renderer2, surface2, icon2, texture2_2);
   if(compare_chaine("Arcanin", nom)==0){
     fichier = fopen("arcanin.txt", "r");
     if(fichier == NULL){
@@ -316,12 +322,10 @@ Pokemon* create_part1_poke_joueur(int* numero){
       exit(1);
     }
   }
-  for(int k=0; k<30; k++){
-    p->nom_poke[k] = name[k];
-  }
   create_part2_poke(fichier, p, numero);
   fclose(fichier);
   (*numero)++;
+  free(nom);
   return p;
 }
 
