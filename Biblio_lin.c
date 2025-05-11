@@ -1,5 +1,5 @@
 #include "Biblio_lin.h"
-int compare_chaine(char* un, char* deux){//testé
+int compare_chaine(char* un, char* deux){//testé Sert à comparer deux chaine de caractère (c'était absolument nécessaire dans la version sur le terminal)
     int i=0;
     int iun=0;
     int ideux=0;
@@ -20,14 +20,14 @@ int compare_chaine(char* un, char* deux){//testé
     }
     return -1;
 }
-void aff_char(char* tab){
+void aff_char(char* tab){//affiche un str (c'était absolument nécessaire dans la version sur le terminal)
     int i=0;
     while(tab[i]!='\0'){
         printf("%c", tab[i]);
         i++;
     }
 }
-char* get_comp_name(Competence_spe comp){
+char* get_comp_name(Competence_spe comp){//Sert à obtenir une chaine de caracteres d'une Comp plutôt qu'un int
     switch(comp){
         case Nitrocharge:       return "Nitrocharge";
         case Abri:              return "Abri";
@@ -66,7 +66,7 @@ char* get_comp_name(Competence_spe comp){
         default:                return "Inconnu";
     }
 }
-Competence_spe get_comp_from_name(char* name) {
+Competence_spe get_comp_from_name(char* name) {//Fais l'inverse de la fonction précédente (servait au entrer utilisateur dans le terminal)
     if (compare_chaine(name, "Nitrocharge") == 0)      return Nitrocharge;
     if (compare_chaine(name, "Abri") == 0)             return Abri;
     if (compare_chaine(name, "Feu_Follet") == 0)       return Feu_Follet;
@@ -104,7 +104,7 @@ Competence_spe get_comp_from_name(char* name) {
     return -1; // Flop
 }
 
-Type get_type_from_name(char* name) {
+Type get_type_from_name(char* name) {//comme en haut mais avec des types
     if (compare_chaine(name, "Normal") == 0)    return Normal;
     if (compare_chaine(name, "Feu") == 0)       return Feu;
     if (compare_chaine(name, "Eau") == 0)       return Eau;
@@ -127,7 +127,7 @@ Type get_type_from_name(char* name) {
 }
 
 
-char* read_ligne_char(FILE* fichier, int nbligne) {
+char* read_ligne_char(FILE* fichier, int nbligne) {//Sert à aller chercher une chaine de caracteres dans un fichier à une ligne donnée
     rewind(fichier);
     char ligne[100];
     char poubelle[100];
@@ -153,7 +153,7 @@ char* read_ligne_char(FILE* fichier, int nbligne) {
 }
 
 
-int read_ligne_int(FILE* fichier, int nbligne){
+int read_ligne_int(FILE* fichier, int nbligne){//comme celle avant mais avec un int
     rewind(fichier);
     int result=0;
     char poubelle[100];
@@ -166,7 +166,7 @@ int read_ligne_int(FILE* fichier, int nbligne){
     }
     return result;
 }
-float read_ligne_float(FILE* fichier, int nbligne){
+float read_ligne_float(FILE* fichier, int nbligne){//pareil avec float
     rewind(fichier);
     float result=0;
     char poubelle[100];
