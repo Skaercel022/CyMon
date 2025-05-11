@@ -27,7 +27,7 @@ int main(){
         printf("Erreur lors du chargement de l'icône : %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
-    window2 = SDL_CreateWindow("CyMon par Nathan, Sarah & Tom", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1200, 900, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    window2 = SDL_CreateWindow("CyMon par Nathan, Sarah & Tom", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1200, 900, SDL_WINDOW_SHOWN);
     if (window2 == NULL) {
         printf("Erreur lors de la création de la fenêtre : %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
