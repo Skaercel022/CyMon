@@ -231,7 +231,7 @@ void create_part2_poke(FILE* file, Pokemon* poke, int* nb){
   crea_comp(&(poke->spe3), get_comp_from_name(read_ligne_char(file, 10)));
 }
 
-Pokemon* create_part1_poke_joueur(int* numero){
+Pokemon* create_part1_poke_joueur(int* numero, int unoudeux){
   Pokemon* p = malloc(sizeof(Pokemon));
   char* nom=malloc(30*sizeof(char));
   FILE* fichier;
@@ -246,15 +246,27 @@ Pokemon* create_part1_poke_joueur(int* numero){
     printf("Erreur d'allocation mémoire\n");
     exit(1);
   }
-  aff_fenetre(3, window2, renderer2, surface2, icon2, texture2_2);
+  if(unoudeux==1){
+    aff_fenetre(3, window2, renderer2, surface2, icon2, texture2_2);
+  }
+  else if(unoudeux==2){
+    aff_fenetre(5, window2, renderer2, surface2, icon2, texture2_2);
+  }
+  else if(unoudeux==3){
+    aff_fenetre(6, window2, renderer2, surface2, icon2, texture2_2);
+  }
   do{
     nom=get_name_from_mouse(1, &x, &y, *p, NULL, NULL);
   }while(compare_chaine("Arcanin", nom)!=0 && compare_chaine("Pikachu", nom)!=0 && compare_chaine("Tortank", nom)!=0 && compare_chaine("Gardevoir", nom)!=0 && compare_chaine("Absol", nom)!=0 && compare_chaine("Mackogneur", nom)!=0 && compare_chaine("Givrali", nom)!=0 && compare_chaine("Jungko", nom)!=0 && compare_chaine("Ossatueur", nom)!=0 && compare_chaine("Tranchodon", nom)!=0 );
-  printf("probleme pas la\n");
+  printf("Pokémon Validé\n");
   p->numero = *numero;
   strcpy(p->nom_poke,nom);
   (*numero)++;
+  SDL_DestroyRenderer(renderer2);
+  SDL_DestroyWindow(window2);
   aff_fenetre(4, window2, renderer2, surface2, icon2, texture2_2);
+  SDL_DestroyRenderer(renderer2);
+  SDL_DestroyWindow(window2);
   if(compare_chaine("Arcanin", nom)==0){
     fichier = fopen("arcanin.txt", "r");
     if(fichier == NULL){
@@ -468,10 +480,10 @@ Pokemon* create_part1_poke_ordi(int* numero){
   return p;
 }
 
-Pokemon** create_team_joueur(int* numero){
+Pokemon** create_team_joueur(int* numero, int unoudeux){
   Pokemon** team = malloc(3*sizeof(Pokemon*));
   for(int i = 0; i < 3; i++){
-    team[i] = create_part1_poke_joueur(numero);
+    team[i] = create_part1_poke_joueur(numero, unoudeux);
   }
   return team;
 }
