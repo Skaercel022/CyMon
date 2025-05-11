@@ -16,6 +16,7 @@ int main(){
         verif=scanf("%d", &mode);
         vide_buffer();
     }while((mode!=1 && mode!=2) || verif!=1);
+    //processus de lancement de la creation d'équipe en mode multijoueur
     if(mode==2){
         printf("Vous avez choisi le mode multijoueur");
         printf("\n\n                             Veuillez creer une equipe pour P1");
@@ -23,11 +24,13 @@ int main(){
         printf("\n\n                             Veuillez creer une equipe pour P2");
         p2=create_team_joueur(adr);
     }
+    //processus de lancement de la creation d'équipe en mode solo
     else{
         printf("Vous avez choisi le mode solo");
         p1=create_team_joueur(adr);
         p2=create_team_ordi(adr);
     }
+    //lancement de la partie
     fight(p1, p2, mode);
     return 0;
 }
