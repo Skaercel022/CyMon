@@ -179,3 +179,6 @@ float read_ligne_float(FILE* fichier, int nbligne){
     }
     return result;
 }
+void vide_buffer(){
+    while(getchar()!='\n');
+}
