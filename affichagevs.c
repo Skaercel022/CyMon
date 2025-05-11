@@ -1,4 +1,6 @@
 #include "Biblio_lin.h"
+
+//ferme sdl
 void close_sdl(SDL_Surface* surf, SDL_Window* wind, SDL_Renderer* ren, SDL_Texture* tex, SDL_Surface* surf2){
     SDL_FreeSurface(surf);
     SDL_FreeSurface(surf2);
@@ -6,6 +8,8 @@ void close_sdl(SDL_Surface* surf, SDL_Window* wind, SDL_Renderer* ren, SDL_Textu
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(wind);
 }
+
+//lancement de la musique
 void jouer_musique(int choix, int boucle){
     Mix_Music *musique = NULL;
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
@@ -28,6 +32,8 @@ void jouer_musique(int choix, int boucle){
     Mix_FreeMusic(musique);
     Mix_CloseAudio();
 }
+
+//scanf d'un nombre entier via sdl
 int sdl_scanf_int(int nb){
     int value=0;
     SDL_Event event;
@@ -94,6 +100,8 @@ int sdl_scanf_int(int nb){
     }
     return 0;
 }
+
+//scanf d'une chaine de caractere via sdl
 void sdl_scanf_str(char* str){
     char* chaine=malloc(sizeof(char)*45);
     SDL_Event event;
@@ -127,6 +135,8 @@ void sdl_scanf_str(char* str){
         str[j]=chaine[j];
     }
 }
+
+//affichage du cooldown des attaques
 void aff_cooldown(Pokemon* poke, SDL_Renderer* renderer2){
     SDL_Texture* texture2_2 = NULL;
     SDL_Surface* surface2 = NULL;
@@ -257,6 +267,8 @@ void aff_cooldown(Pokemon* poke, SDL_Renderer* renderer2){
     SDL_DestroyTexture(texture2_2);
     SDL_RenderPresent(renderer2);
 }
+
+//affichage global des éléments comme les points de vie et la speedbar
 void aff_barre(Pokemon* poke, SDL_Renderer* renderer2, int position){
     SDL_Rect rect_vie={279, 83, 85, 18};
     SDL_Rect rect_speedbar={304, 114, 60, 18};
@@ -376,6 +388,8 @@ void aff_barre(Pokemon* poke, SDL_Renderer* renderer2, int position){
     SDL_RenderPresent(renderer2);
 
 }
+
+//affichage des pokemon
 SDL_Surface* aff_pokemon_1(Pokemon* poke){
     SDL_Surface* surface3 = NULL;
     if(poke->pv_courant<=0.0){
@@ -468,6 +482,8 @@ SDL_Surface* aff_pokemon_1(Pokemon* poke){
     }
     return surface3;
 }
+
+//deuxieme partie de l'affichage des pokemon
 void aff_pokemon_2(Pokemon** p1, Pokemon** p2, SDL_Renderer** renderer){
     SDL_Texture* texture2_2 = NULL;
     SDL_Surface* surface2 = NULL;
@@ -512,6 +528,7 @@ void aff_pokemon_2(Pokemon** p1, Pokemon** p2, SDL_Renderer** renderer){
     printf("\nFin du programme");
 }
 
+//affichage des effets de l'attaque
 void aff_event_no_name(SDL_Renderer* renderer2, int choix){
     SDL_Texture* texture2_2 = NULL;
     SDL_Surface* surface2 = NULL;
@@ -550,6 +567,8 @@ void aff_event_no_name(SDL_Renderer* renderer2, int choix){
     SDL_FreeSurface(surface2);
     SDL_DestroyTexture(texture2_2);
 }
+
+//affichage du nom des pokemon
 SDL_Surface* sdl_aff_name(Pokemon* poke, SDL_Rect* rect){
     SDL_Surface* surface3 = NULL;
     rect->h=40;
@@ -598,6 +617,8 @@ SDL_Surface* sdl_aff_name(Pokemon* poke, SDL_Rect* rect){
     }
     return surface3;
 }
+
+//affichage des status des pokemon
 void aff_simple_event(SDL_Renderer* renderer2, int choix, Pokemon* cible){
     SDL_Texture* texture2 = NULL;
     SDL_Texture* texture2_2 = NULL;
@@ -665,6 +686,8 @@ void aff_simple_event(SDL_Renderer* renderer2, int choix, Pokemon* cible){
     SDL_FreeSurface(surface2);
     SDL_DestroyTexture(texture2_2);
 }
+
+//affichage du choix des attaques des pokemon
 void aff_atk_screen(SDL_Renderer* renderer2, Pokemon* poke){
     SDL_Texture* texture2 = NULL;
     SDL_Surface* surface3 = NULL;
@@ -714,6 +737,8 @@ void aff_atk_screen(SDL_Renderer* renderer2, Pokemon* poke){
     SDL_FreeSurface(surface3);
     SDL_DestroyTexture(texture2);
 }
+
+//affichage des effets de chaque attaque des pokemon
 void aff_atk_effect_sdl(SDL_Renderer* renderer2, Pokemon* poke, Comp choix){
     SDL_Texture* texture2 = NULL;
     SDL_Texture* texture2_2 = NULL;
@@ -872,6 +897,8 @@ void aff_atk_effect_sdl(SDL_Renderer* renderer2, Pokemon* poke, Comp choix){
     SDL_DestroyTexture(texture2_2);
     
 }
+
+//gestion des clics de la souris et des hitbox
 char* get_name_from_mouse(int choix, int* x, int* y, Pokemon poke){
     SDL_Event event;
     int finish=0;
@@ -1013,6 +1040,8 @@ char* get_name_from_mouse(int choix, int* x, int* y, Pokemon poke){
     printf("\nValidé\n");
     return name;
 }
+
+//affichage de la fenetre de jeu
 int aff_fenetre(int nb, SDL_Window* window2, SDL_Renderer* renderer2, SDL_Surface* surface2, SDL_Surface* icon2, SDL_Texture* texture2_2, char** name){
     int mode;
     int x=0;
@@ -1258,5 +1287,3 @@ int aff_fenetre(int nb, SDL_Window* window2, SDL_Renderer* renderer2, SDL_Surfac
     free(poke);
     return mode;
 }
-
-
