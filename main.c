@@ -2,6 +2,7 @@
 #include "combat.h"
 #include "creapers.h"
 #include "affichagevs.h"
+
 int main(){
     srand(time(NULL));
     int num=1;
