@@ -1,8 +1,6 @@
 #include "Biblio_lin.h"
 #include "affichagevs.h"
 #include "creapers.h"
-
-//ajout des attaques à notre pokemon
 void crea_comp(Comp* comp, Competence_spe comp_spe){
   comp->comp = comp_spe;
   comp->cooldown = 0;
@@ -212,8 +210,7 @@ void crea_comp(Comp* comp, Competence_spe comp_spe){
     comp->precision = 100;
   }
 }
-
-//deuxieme partie creation personnage commune au joueur et à l'ordinateur
+//on pourrait mettre aussi en arugment de la fonction la structure pokemon pour utiliser son nom
 void create_part2_poke(FILE* file, Pokemon* poke, int* nb){
   poke->numero=*nb;
   poke->sleep=0;
@@ -234,7 +231,6 @@ void create_part2_poke(FILE* file, Pokemon* poke, int* nb){
   crea_comp(&(poke->spe3), get_comp_from_name(read_ligne_char(file, 10)));
 }
 
-//premiere partie creation pokemon pour le joueur
 Pokemon* create_part1_poke_joueur(int* numero, int unoudeux){
   Pokemon* p = malloc(sizeof(Pokemon));
   char* nom=malloc(30*sizeof(char));
@@ -249,28 +245,25 @@ Pokemon* create_part1_poke_joueur(int* numero, int unoudeux){
   if (!p) {
     printf("Erreur d'allocation mémoire\n");
     exit(1);
-  }
-  if(unoudeux==1){
-    aff_fenetre(3, window2, renderer2, surface2, icon2, texture2_2);
-  }
-  else if(unoudeux==2){
-    aff_fenetre(5, window2, renderer2, surface2, icon2, texture2_2);
-  }
-  else if(unoudeux==3){
-    aff_fenetre(6, window2, renderer2, surface2, icon2, texture2_2);
-  }
+  }  
   do{
-    nom=get_name_from_mouse(1, &x, &y, *p, NULL, NULL);
+    if(unoudeux==1){
+      aff_fenetre(3, window2, renderer2, surface2, icon2, texture2_2, &nom);
+    }
+    else if(unoudeux==2){
+      aff_fenetre(5, window2, renderer2, surface2, icon2, texture2_2, &nom);
+    }
+    else if(unoudeux==3){
+      aff_fenetre(6, window2, renderer2, surface2, icon2, texture2_2, &nom);
+    }
+    close_sdl(surface2, window2, renderer2, texture2_2, NULL);
   }while(compare_chaine("Arcanin", nom)!=0 && compare_chaine("Pikachu", nom)!=0 && compare_chaine("Tortank", nom)!=0 && compare_chaine("Gardevoir", nom)!=0 && compare_chaine("Absol", nom)!=0 && compare_chaine("Mackogneur", nom)!=0 && compare_chaine("Givrali", nom)!=0 && compare_chaine("Jungko", nom)!=0 && compare_chaine("Ossatueur", nom)!=0 && compare_chaine("Tranchodon", nom)!=0 );
   printf("Pokémon Validé\n");
   p->numero = *numero;
   strcpy(p->nom_poke,nom);
   (*numero)++;
-  SDL_DestroyRenderer(renderer2);
-  SDL_DestroyWindow(window2);
-  aff_fenetre(4, window2, renderer2, surface2, icon2, texture2_2);
-  SDL_DestroyRenderer(renderer2);
-  SDL_DestroyWindow(window2);
+  close_sdl(surface2, window2, renderer2, texture2_2, NULL);
+  aff_fenetre(4, window2, renderer2, surface2, icon2, texture2_2, NULL);
   if(compare_chaine("Arcanin", nom)==0){
     fichier = fopen("arcanin.txt", "r");
     if(fichier == NULL){
@@ -345,7 +338,7 @@ Pokemon* create_part1_poke_joueur(int* numero, int unoudeux){
   return p;
 }
 
-//premiere partie creation pokemon pour l'ordinateur
+
 Pokemon* create_part1_poke_ordi(int* numero){
   Pokemon* p = malloc(sizeof(Pokemon));
   if (!p) {
@@ -484,7 +477,6 @@ Pokemon* create_part1_poke_ordi(int* numero){
   return p;
 }
 
-//creation équipe joueur
 Pokemon** create_team_joueur(int* numero, int unoudeux){
   Pokemon** team = malloc(3*sizeof(Pokemon*));
   for(int i = 0; i < 3; i++){
@@ -493,7 +485,6 @@ Pokemon** create_team_joueur(int* numero, int unoudeux){
   return team;
 }
 
-//creation équipe ordinateur
 Pokemon** create_team_ordi(int* numero){
   Pokemon** team = malloc(3*sizeof(Pokemon*));
   for(int i = 0; i < 3; i++){
