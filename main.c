@@ -51,6 +51,7 @@ int main(){
     SDL_RenderClear(renderer2);
     SDL_RenderCopy(renderer2, texture2_2, NULL, NULL);
     SDL_RenderPresent(renderer2);
+    //choix du mode de jeu
     sdl_scanf_int(1);
     if(renderer2==NULL ){
         printf("\nerreur");
@@ -58,12 +59,14 @@ int main(){
     mode=aff_fenetre(2, window2, renderer2, surface2, icon2, texture2_2, NULL);
     printf("\nLe blocage n'est pas ici");
     printf("\nLe blocage n'est pas ici");
+    //creation des équipes du mode multijoueur
     if(mode==2){
         SDL_Delay(100); // 100 ms de pause
         p1=create_team_joueur(adr, 2);
         SDL_Delay(100); // 100 ms de pause
         p2=create_team_joueur(adr, 3);
     }
+    //creation des équipes du mode solo
     else if(mode!=2){
         SDL_Delay(100); // 100 ms de pause
         p1=create_team_joueur(adr, 1);
@@ -72,9 +75,11 @@ int main(){
         printf("ok\n");
     }
     printf("\nOK");
+    //lancement du combat
     fight(p1, p2, mode, renderer2, window2);
     SDL_DestroyRenderer(renderer2);
     SDL_DestroyWindow(window2);
     IMG_Quit();
     SDL_Quit();
+    return 0;
 }
