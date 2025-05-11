@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_image.h>
 
 #define couleur(param) printf("\033[%sm",param)
 
@@ -64,5 +66,5 @@ Type get_type_from_name(char* name);
 char* read_ligne_char(FILE* fichier, int nbligne);
 int read_ligne_int(FILE* fichier, int nbligne);
 float read_ligne_float(FILE* fichier, int nbligne);
-
+void vide_buffer();
 #endif
