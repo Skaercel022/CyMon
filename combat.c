@@ -1,6 +1,8 @@
 #include "Biblio_lin.h"
 #include "combat.h"
 #include "affichagevs.h"
+
+//multiplicateur de dégats en fonction des types des pokemon
 float type_effect(Type atk, Type def){
     if(((atk==Normal) && (def==Spectre)) || ((atk==Electrik) && (def==Sol)) || ((atk==Combat) && (def==Spectre)) || ((atk==Poison) && (def==Acier)) || ((atk==Sol) && (def==Vol)) || ((atk==Psy) && (def==Tenebres)) || ((atk==Spectre) && (def==Normal)) || ((atk==Dragon) && (def==Fee))){
         return 0.0;
@@ -18,6 +20,8 @@ float type_effect(Type atk, Type def){
         return 1.0;
     }
 }
+
+//gestion des effets de status
 void effect_status(Pokemon* poke, int* nbtour, SDL_Renderer* rend){//renwind
     if(poke->etat==Brulure){
         printf("\n");
@@ -44,6 +48,8 @@ void effect_status(Pokemon* poke, int* nbtour, SDL_Renderer* rend){//renwind
         }
     }
 }
+
+//affichage dans le terminal des effets des attaques (de secours en cas de probleme avec sdl)
 void aff_effect_atk(Competence_spe atk){ 
     switch (atk) {
         case Nitrocharge:     printf("||Feu: 50 puissance (amplifie la vitesse)"); 
@@ -120,6 +126,7 @@ void aff_effect_atk(Competence_spe atk){
     }
 }
 
+//affichage des attaques dans le terminal
 void aff_atk(Competence_spe atk){
     switch (atk) {
         case Nitrocharge:     printf("Nitrocharge"); break;
@@ -162,6 +169,7 @@ void aff_atk(Competence_spe atk){
     }
 }
 
+//gestion de la speedbar
 void speedbarplus(Pokemon* un, Pokemon* deux, Pokemon* trois, Pokemon* quatre, Pokemon* cinq, Pokemon* six){
     if(un->etat==Paralysie){
         (*un).speedbar=(*un).speedbar+((*un).vitesse)/2;
@@ -207,6 +215,7 @@ int plus1000(Pokemon un, Pokemon deux, Pokemon trois, Pokemon quatre, Pokemon ci
     return 0;
 }
 
+//choix des attaques via terminal
 Comp choix_atk(Pokemon* bu, SDL_Renderer* rend){//renwind
     char* name=malloc(100*sizeof(char));
     int x=0;
@@ -255,6 +264,8 @@ Comp choix_atk(Pokemon* bu, SDL_Renderer* rend){//renwind
         }
     }while(1);
 }
+
+//gestion des esquives
 int attaque_esquivee(Comp atk, Pokemon* attaque, Pokemon* defend){
     int alea=rand()%100+1;
     if(alea> (atk.precision*(attaque->précision/defend->agilite))){
@@ -266,6 +277,8 @@ int attaque_esquivee(Comp atk, Pokemon* attaque, Pokemon* defend){
         return 1;
     }
 }
+
+//calcul des degats des attaques
 float degats(Pokemon* attaquant, Pokemon* defenseur, Comp atq){//renwind
     int aleacm = rand() % 15 + 85;
     int aleacrit = rand() % 100 + 1;
@@ -302,6 +315,8 @@ float degats(Pokemon* attaquant, Pokemon* defenseur, Comp atq){//renwind
         }
     }
 }
+
+//gestion des effets des attaques
 void effet_spe(Pokemon** attaquant, Pokemon* defenseur, Comp atk, SDL_Renderer* rend) {//renwind
     int alea = rand() % 100;
     // Effets aléatoires basés sur une probabilité
@@ -486,6 +501,8 @@ void effet_spe(Pokemon** attaquant, Pokemon* defenseur, Comp atk, SDL_Renderer* 
             break;
     }
 }
+
+//
 Comp maj_damage(Pokemon* offense, Pokemon** adversaires, Pokemon** cible){
     Comp result;
     Comp* adr=&(offense->atkbase);
@@ -520,6 +537,8 @@ Comp maj_damage(Pokemon* offense, Pokemon** adversaires, Pokemon** cible){
     (*adr).cooldown=(*adr).cooldownmax;   
     return result;
 }
+
+//choix des attaques de l'ordinateur
 Comp choix_bot_spe(Pokemon* offense, Pokemon** adversaires, Pokemon** cible, int nb){
     Comp result=offense->atkbase;
     Comp* adr=&(offense->atkbase);
@@ -611,6 +630,8 @@ Comp choix_bot_spe(Pokemon* offense, Pokemon** adversaires, Pokemon** cible, int
     }
     return result;
 }
+
+//gere l'execution d'une attaque
 void fin_e_a_b(Pokemon* offense, Pokemon* cible, Comp choix, SDL_Renderer* rend){//renwind
     int x=0;
     int aleapara=rand()%100+1;
@@ -720,6 +741,8 @@ void fin_e_a_b(Pokemon* offense, Pokemon* cible, Comp choix, SDL_Renderer* rend)
         aff_simple_event(rend, 1, offense);
     }
 }
+
+//gestion des effets des attaques de l'ordinatezr
 void effect_atk_bot(Pokemon* offense, Pokemon** team, Pokemon** adversaires, SDL_Renderer* rend){//renwind
     printf("\n\n%s", (*offense).nom_poke);
     Pokemon* cible;
@@ -800,6 +823,8 @@ void effect_atk_bot(Pokemon* offense, Pokemon** team, Pokemon** adversaires, SDL
         fin_e_a_b(offense, cible, choix, rend);
     }
 }
+
+//choix de la cible
 Pokemon* choix_target(Pokemon** team, Pokemon** opp, SDL_Renderer* rend){
     int x = 0;
     int y = 0;
@@ -936,6 +961,8 @@ void fin_e_a(Pokemon* offense, Pokemon* cible, Comp atk, SDL_Renderer* rend){//r
         aff_simple_event(rend, 1, offense);
     }
 }
+
+//gestion des effets des attaques
 void effect_atk(Pokemon* offense, Pokemon** team, Pokemon** adversaires, Comp atk, SDL_Renderer* rend){//renwind
     Pokemon* cible;
     if(atk.comp==Abri || atk.comp==Danse_lame || atk.comp==Repos || atk.comp==Plenitude || atk.comp==Gonflette || atk.comp==Aboiement || atk.comp==Mur_de_fer || atk.comp==Seisme || atk.comp==Abattage || atk.comp==Danse_draco || atk.comp==Surf){
@@ -980,6 +1007,8 @@ Pokemon* maj(Pokemon* un, Pokemon* deux){
 Pokemon* maj6(Pokemon* un, Pokemon* deux, Pokemon* trois, Pokemon* quatre, Pokemon* cinq, Pokemon* six){
     return maj(maj(maj(un, deux), maj(trois, quatre)),maj(cinq, six));
 }
+
+//gestion des cooldown d'une equipe à chaque tour
 void cooldown1poke(Pokemon* poke){
     if((*poke).spe1.cooldown>0){
         (*poke).spe1.cooldown=(*poke).spe1.cooldown-1;
@@ -991,6 +1020,8 @@ void cooldown1poke(Pokemon* poke){
         (*poke).spe3.cooldown=(*poke).spe3.cooldown-1;
     }
 }
+
+//fonction s'occupant de tout le combat dans sa globalité
 int fight(Pokemon** player, Pokemon** bot, int mode, SDL_Renderer* rend, SDL_Window* wind) { //renwind
     SDL_Surface* surface2 = NULL;
     SDL_Surface* icon2 = NULL;
