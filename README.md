@@ -1,8 +1,13 @@
 # projet_info_preing1
-Projet informatique en C
 
-Il faut savoir que le code fonctionne en entrée clavier c'est-à-dire que si aucune information n'est donnée et que le code n'avance c'est probablement qu'il faut appuyer sur Entrer.
+English : 
+To compile the game, open your terminal, navigate to your file, and type "make."
+To run it, type "./cymon."
+The game is played with the mouse only.
+Warning: You must have gcc and sdl2 installed.
 
-Pour choisir une cible écrivez son nom, puis appuyer sur entrer.
-
-Pour choisir un pokemon CLIQUEZ n'écrivez pas son nom
+Français : 
+Pour compiler le jeu ouvrez votre terminal, allez dans votre fichier et tapez "make".
+Pour l'executer, tapez "./cymon".
+Le jeu se joue uniquement avec la souris.
+Attention : vous devez avoir au préalable gcc et sdl2 d'installé.
