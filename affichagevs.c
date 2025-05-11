@@ -1,5 +1,11 @@
 #include "Biblio_lin.h"
-
+void close_sdl(SDL_Surface* surf, SDL_Window* wind, SDL_Renderer* ren, SDL_Texture* tex, SDL_Surface* surf2){
+    SDL_FreeSurface(surf);
+    SDL_FreeSurface(surf2);
+    SDL_DestroyTexture(tex);
+    SDL_DestroyRenderer(ren);
+    SDL_DestroyWindow(wind);
+}
 void jouer_musique(int choix, int boucle){
     Mix_Music *musique = NULL;
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
@@ -315,6 +321,9 @@ void aff_barre(Pokemon* poke, SDL_Renderer* renderer2, int position){
     if(poke->pv_courant==poke->pv_max){
         rect_vie.w=85;
     }
+    else if(poke->pv_courant==0.0){
+        rect_vie.w=0;
+    }   
     else{
         rect_vie.w=(85*(poke->pv_courant))/poke->pv_max;
     }
@@ -544,10 +553,7 @@ void aff_event_no_name(SDL_Renderer* renderer2, int choix){
 SDL_Surface* sdl_aff_name(Pokemon* poke, SDL_Rect* rect){
     SDL_Surface* surface3 = NULL;
     rect->h=40;
-    if(poke->pv_courant<=0.0){
-        surface3 = IMG_Load("Vide.png");
-    }
-    else if(poke->atkbase.comp==Griffe){
+    if(poke->atkbase.comp==Griffe){
         surface3 = IMG_Load("Absol name.png");
     }
     else if(poke->atkbase.comp==Flammeche){
@@ -598,7 +604,7 @@ void aff_simple_event(SDL_Renderer* renderer2, int choix, Pokemon* cible){
     SDL_Surface* surface2 = NULL;
     SDL_Surface* surface2_2 = NULL;
     SDL_Rect place={0, 653, 0, 0};
-    SDL_Rect place2={325, 776, 1200, 653};
+    SDL_Rect place2={325, 776, 0, 40};
     if(choix==1){
         surface2 = IMG_Load("KO.png");
     }
@@ -708,13 +714,11 @@ void aff_atk_screen(SDL_Renderer* renderer2, Pokemon* poke){
     SDL_FreeSurface(surface3);
     SDL_DestroyTexture(texture2);
 }
-void aff_atk_effect_sdl(SDL_Renderer* renderer2, Pokemon* poke, Comp choix, Pokemon* cible){
+void aff_atk_effect_sdl(SDL_Renderer* renderer2, Pokemon* poke, Comp choix){
     SDL_Texture* texture2 = NULL;
     SDL_Texture* texture2_2 = NULL;
     SDL_Surface* surface3 = NULL;
-    SDL_Surface* surface2_2 = NULL;
     SDL_Rect place={0, 653, 1200, 653};
-    SDL_Rect place2={325, 776, 0, 40};
     if(poke->atkbase.comp==Griffe){
         if(choix.comp==Griffe){
             surface3 = IMG_Load("Absol griffe.png");
@@ -862,29 +866,13 @@ void aff_atk_effect_sdl(SDL_Renderer* renderer2, Pokemon* poke, Comp choix, Poke
     texture2 = SDL_CreateTextureFromSurface(renderer2, surface3);
     SDL_RenderCopy(renderer2, texture2, NULL, &place);
     SDL_RenderPresent(renderer2);
-    surface2_2=sdl_aff_name(cible,&place2);
-    if (surface2_2 == NULL) {
-        printf("Erreur IMG_Load : %s\n", IMG_GetError());
-        exit(EXIT_FAILURE);
-    }
-    texture2_2 = SDL_CreateTextureFromSurface(renderer2, surface2_2);
-    SDL_RenderCopy(renderer2, texture2_2, NULL, &place2);
-    SDL_RenderPresent(renderer2);
     SDL_Delay(1500);
-    surface3 = IMG_Load("Clear.png");
-    if (surface3==NULL) {
-        printf("Erreur IMG_Load : %s\n", IMG_GetError());
-        exit(EXIT_FAILURE);
-    }
-    texture2_2 = SDL_CreateTextureFromSurface(renderer2, surface3);
-    SDL_RenderCopy(renderer2, texture2_2, NULL, &place);
-    SDL_RenderPresent(renderer2);
     SDL_FreeSurface(surface3);
     SDL_DestroyTexture(texture2);
     SDL_DestroyTexture(texture2_2);
     
 }
-char* get_name_from_mouse(int choix, int* x, int* y, Pokemon poke, Pokemon** poke1, Pokemon** poke2){
+char* get_name_from_mouse(int choix, int* x, int* y, Pokemon poke){
     SDL_Event event;
     int finish=0;
     char* name=malloc(40*sizeof(char));
@@ -1025,7 +1013,11 @@ char* get_name_from_mouse(int choix, int* x, int* y, Pokemon poke, Pokemon** pok
     printf("\nValidé\n");
     return name;
 }
-void aff_fenetre(int nb, SDL_Window* window2, SDL_Renderer* renderer2, SDL_Surface* surface2, SDL_Surface* icon2, SDL_Texture* texture2_2){
+int aff_fenetre(int nb, SDL_Window* window2, SDL_Renderer* renderer2, SDL_Surface* surface2, SDL_Surface* icon2, SDL_Texture* texture2_2, char** name){
+    int mode;
+    int x=0;
+    int y=0;
+    Pokemon* poke=malloc(sizeof(Pokemon));
     if(nb==0){
         printf("Attente de saisie dans sdl_scanf_str...\n");
         icon2 = SDL_LoadBMP("Icon.bmp");
@@ -1107,7 +1099,8 @@ void aff_fenetre(int nb, SDL_Window* window2, SDL_Renderer* renderer2, SDL_Surfa
         SDL_RenderClear(renderer2);
         SDL_RenderCopy(renderer2, texture2_2, NULL, NULL);
         SDL_RenderPresent(renderer2);
-        jouer_musique(1,-1); // Montre ce qu'on a rendu
+        mode=sdl_scanf_int(2);
+        close_sdl(surface2, window2, renderer2, texture2_2, icon2);
     }
     else if(nb==3){    
         icon2 = SDL_LoadBMP("Icon.bmp");
@@ -1139,7 +1132,8 @@ void aff_fenetre(int nb, SDL_Window* window2, SDL_Renderer* renderer2, SDL_Surfa
         SDL_RenderClear(renderer2);
         SDL_RenderCopy(renderer2, texture2_2, NULL, NULL);
         SDL_RenderPresent(renderer2);
-        jouer_musique(2,-1); // Montre ce qu'on a rendu
+        *name=get_name_from_mouse(1, &x, &y, *poke);
+        close_sdl(surface2, window2, renderer2, texture2_2, icon2);
     }
     else if(nb==4){    
         icon2 = SDL_LoadBMP("Icon.bmp");
@@ -1171,7 +1165,8 @@ void aff_fenetre(int nb, SDL_Window* window2, SDL_Renderer* renderer2, SDL_Surfa
         SDL_RenderClear(renderer2);
         SDL_RenderCopy(renderer2, texture2_2, NULL, NULL);
         SDL_RenderPresent(renderer2);
-        jouer_musique(2,-1); // Montre ce qu'on a rendu
+        SDL_Delay(1500);
+        close_sdl(surface2, window2, renderer2, texture2_2, icon2);
     }
     else if(nb==5){    
         icon2 = SDL_LoadBMP("Icon.bmp");
@@ -1203,7 +1198,8 @@ void aff_fenetre(int nb, SDL_Window* window2, SDL_Renderer* renderer2, SDL_Surfa
         SDL_RenderClear(renderer2);
         SDL_RenderCopy(renderer2, texture2_2, NULL, NULL);
         SDL_RenderPresent(renderer2);
-        jouer_musique(2,-1); // Montre ce qu'on a rendu
+        *name=get_name_from_mouse(1, &x, &y, *poke);
+        close_sdl(surface2, window2, renderer2, texture2_2, icon2);// Montre ce qu'on a rendu
     }
     else if(nb==6){    
         icon2 = SDL_LoadBMP("Icon.bmp");
@@ -1235,7 +1231,8 @@ void aff_fenetre(int nb, SDL_Window* window2, SDL_Renderer* renderer2, SDL_Surfa
         SDL_RenderClear(renderer2);
         SDL_RenderCopy(renderer2, texture2_2, NULL, NULL);
         SDL_RenderPresent(renderer2);
-        jouer_musique(2,-1); // Montre ce qu'on a rendu
+        *name=get_name_from_mouse(1, &x, &y, *poke);
+        close_sdl(surface2, window2, renderer2, texture2_2, icon2); // Montre ce qu'on a rendu
     }
     else if(nb==7){    
         icon2 = SDL_LoadBMP("Icon.bmp");
@@ -1258,14 +1255,8 @@ void aff_fenetre(int nb, SDL_Window* window2, SDL_Renderer* renderer2, SDL_Surfa
         SDL_RenderPresent(renderer2);
         jouer_musique(2,-1); // Montre ce qu'on a rendu
     }
-}
-
-void close_sdl(SDL_Surface* surf, SDL_Window* wind, SDL_Renderer* ren, SDL_Texture* tex, SDL_Surface* surf2){
-    SDL_FreeSurface(surf);
-    SDL_FreeSurface(surf2);
-    SDL_DestroyTexture(tex);
-    SDL_DestroyRenderer(ren);
-    SDL_DestroyWindow(wind);
+    free(poke);
+    return mode;
 }
 
 
