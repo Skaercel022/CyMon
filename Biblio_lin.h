@@ -12,7 +12,7 @@
 
 #define couleur(param) printf("\033[%sm",param)
 
-typedef enum {
+typedef enum {//Ce sont nos attaques
     Nitrocharge, Abri, Feu_Follet, Flammeche, Griffe, Close_Combat, Danse_lame,
     Aboiement, Choc_Mental, Repos, Plenitude, Psyko, Crocs_givre, Laser_glace,
     Douche_froide, Feuillage, Giga_sangsue, Tranche, Balayage, Gonflette,
@@ -20,16 +20,16 @@ typedef enum {
     Pistolet_a_O, Surf, Draco_griffe, Abattage, Danse_draco, Tonnerre, Electacle
 } Competence_spe;
 
-typedef enum {
+typedef enum {//Ce sont les états
     Neutre, Brulure, Gel, Empoisonnement, Paralysie, Sommeil, KO
 } Statut;
 
-typedef enum {
+typedef enum {//Ce sont les types
     Normal, Feu, Eau, Plante, Electrik, Glace, Combat, Poison, Sol, Vol, Psy,
     Insecte, Roche, Spectre, Dragon, Tenebres, Acier, Fee
 } Type;
 
-typedef struct {
+typedef struct {//Ce sont les compétences
     Competence_spe comp;
     int cooldown;
     int cooldownmax;
@@ -38,7 +38,7 @@ typedef struct {
     int precision;
 } Comp;
 
-typedef struct {
+typedef struct {//Ce sont les Pokemon
     char nom_poke[30];
     int numero;
     float pv_courant;
