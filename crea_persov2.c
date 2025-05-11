@@ -1,6 +1,8 @@
 #include "Biblio_lin.h"
 #include "affichagevs.h"
 #include "creapers.h"
+
+//ajout des attaques à notre pokemon
 void crea_comp(Comp* comp, Competence_spe comp_spe){
   comp->comp = comp_spe;
   comp->cooldown = 0;
@@ -210,7 +212,8 @@ void crea_comp(Comp* comp, Competence_spe comp_spe){
     comp->precision = 100;
   }
 }
-//on pourrait mettre aussi en arugment de la fonction la structure pokemon pour utiliser son nom
+
+//deuxieme partie creation personnage commune au joueur et à l'ordinateur
 void create_part2_poke(FILE* file, Pokemon* poke, int* nb){
   poke->numero=*nb;
   poke->sleep=0;
@@ -231,6 +234,7 @@ void create_part2_poke(FILE* file, Pokemon* poke, int* nb){
   crea_comp(&(poke->spe3), get_comp_from_name(read_ligne_char(file, 10)));
 }
 
+//premiere partie creation pokemon pour le joueur
 Pokemon* create_part1_poke_joueur(int* numero, int unoudeux){
   Pokemon* p = malloc(sizeof(Pokemon));
   char* nom=malloc(30*sizeof(char));
@@ -341,7 +345,7 @@ Pokemon* create_part1_poke_joueur(int* numero, int unoudeux){
   return p;
 }
 
-
+//premiere partie creation pokemon pour l'ordinateur
 Pokemon* create_part1_poke_ordi(int* numero){
   Pokemon* p = malloc(sizeof(Pokemon));
   if (!p) {
@@ -480,6 +484,7 @@ Pokemon* create_part1_poke_ordi(int* numero){
   return p;
 }
 
+//creation équipe joueur
 Pokemon** create_team_joueur(int* numero, int unoudeux){
   Pokemon** team = malloc(3*sizeof(Pokemon*));
   for(int i = 0; i < 3; i++){
@@ -488,6 +493,7 @@ Pokemon** create_team_joueur(int* numero, int unoudeux){
   return team;
 }
 
+//creation équipe ordinateur
 Pokemon** create_team_ordi(int* numero){
   Pokemon** team = malloc(3*sizeof(Pokemon*));
   for(int i = 0; i < 3; i++){
